@@ -1,0 +1,23 @@
+def checkduplicate(self,list):
+        counter = [0 for i in range(9)]
+        for x in list:
+            if x != '.':
+                counter[int(x)-1] += 1
+                if counter[int(x)-1] > 1:
+                    return False
+        return True
+    
+    def isValidSudoku(self, board):
+        for xrow in board: #convert into each row
+            if self.checkduplicate(xrow) == False:
+                return False
+        len_col,len_row = len(board[0]),len(board)
+        for xcolumn in [[board[i][j] for i in range(len_row)] for j in range(len_col)]: #convert into each column
+            if self.checkduplicate(xcolumn) == False:
+                return False
+        for c in range(0,len_col,3):
+            for r in range(0,len_row,3):
+                cube_list = [item for row in [board[r][c:c+3] for r in range(r,r+3)] for item in row] #convert into each 3x3 submatrix
+                if self.checkduplicate(cube_list) == False:
+                    return False
+        return True
