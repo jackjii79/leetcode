@@ -1,0 +1,19 @@
+def swapPairs(self, head):
+        if head == None or head.next == None:
+            return head
+        first,second = head,head.next
+        while second != None:
+            first.next = second.next
+            second.next = first
+            if first == head:
+                head = second
+                last = first
+            else:
+                last.next = second
+            last = first
+            first = first.next
+            if first != None:
+                second = first.next
+            else:
+                break
+        return head
