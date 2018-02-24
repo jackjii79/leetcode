@@ -1,0 +1,14 @@
+class Solution:
+    def nextPermutation(self, nums):
+        i = len(nums) - 1
+        s = i
+        while i-1 >= 0 and nums[i] <= nums[i-1]: #find the first index (i-1) that is not in the increasing order from right to left
+            i -= 1
+        while i-1 >= 0 and s > i-1 and nums[i-1] >= nums[s]: #find the smallest index (s) that is bigger the one found in last loop(i-1th)
+            s -= 1
+        if i-1 >= 0:
+            nums[i-1],nums[s] = nums[s],nums[i-1] #swap i-1th and sth element
+        k = len(nums) - 1
+        while k > i: #reverse from [i,k] in increasing order
+            nums[k],nums[i] = nums[i],nums[k]
+            k,i = k-1,i+1
