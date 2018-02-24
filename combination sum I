@@ -1,0 +1,16 @@
+def combination_recursive(self,candidate,target,solution_set,final_solution):
+        if target == 0:
+            final_solution.append(solution_set[:])
+        else:
+            for x in candidate:
+                #case1:make sure target >= x; case2:make sure each solution_set is unique by forward traversing(not traversing back) 
+                if len(solution_set) == 0 and target >= x or len(solution_set) > 0 and x >= solution_set[-1] and target >= x:
+                    solution_set.append(x)
+                    self.combination_recursive(candidate,target-x,solution_set,final_solution)
+                    solution_set.pop()
+            
+    def combinationSum(self, candidates, target):
+        candidates.sort()
+        solution_set,final_solution = [],[] #solution_set store the solution founded in loop, final_solution store all possible solution_set
+        self.combination_recursive(candidates,target,solution_set,final_solution)
+        return final_solution
