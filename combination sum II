@@ -1,0 +1,17 @@
+def combination(self, candidates, target, final_solution, solution_set, index):
+        if target == 0:
+            final_solution.append(solution_set[:])
+        else:
+            for i in range(index,len(candidates)):
+                if i-1 >= index and candidates[i] == candidates[i-1]: #remove duplicated entries 
+                    continue
+                if target >= candidates[i]:
+                    solution_set.append(candidates[i])
+                    self.combination(candidates,target-candidates[i],final_solution,solution_set,i+1)
+                    solution_set.pop()
+            
+    def combinationSum2(self, candidates, target):
+        final_solution,solution_set = [],[]
+        candidates.sort()
+        self.combination(candidates,target,final_solution,solution_set,0)
+        return final_solution
