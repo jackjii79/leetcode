@@ -1,0 +1,41 @@
+def multiply(self, num1, num2):
+#let the num with smaller number of bits be 被乘数num4(the one that being multiplied by another)
+        num3,num4 = num1,num2
+        if len(num1) < len(num2):
+            num3,num4 = num2,num1
+            #interres store multipled results from each bit in num4
+        interres = [[] for i in range(len(num4))]
+        for i2 in range(len(num4)-1,-1,-1):
+            n2,remain = int(num4[i2]),0
+            for i in range(len(num4)-1-i2):
+                interres[i2].insert(0,0)
+            if n2 == 0:
+                interres[i2].insert(0,0)
+            else:
+                for i1 in range(len(num3)-1,-1,-1):
+                    n1 = int(num3[i1])
+                    interres[i2].insert(0,(n1*n2+remain)%10)
+                    remain = int((n1*n2+remain)/10)
+                if remain != 0:
+                    interres[i2].insert(0,remain)
+        final = []
+        #sum up results from each bit multiplied in last step and store into array final
+        for x in interres:
+            if len(final) == 0:
+                final = x[:]
+            else:
+                remain,f,ix = 0,len(final)-1,len(x)-1
+                while f >= 0 and ix >= 0:
+                    final[f],remain = (final[f]+x[ix]+remain)%10,int((final[f]+x[ix]+remain)/10)
+                    f -= 1
+                    ix -= 1
+                if remain != 0:
+                    if f < 0:
+                        final.insert(0,remain)
+                    else:
+                        while remain != 0 and f >= 0:
+                            final[f],remain = (final[f]+remain)%10,int((final[f]+remain)/10)
+                            f -= 1
+                        if f < 0 and remain != 0:
+                            final.insert(0,remain)
+        return ''.join(str(e) for e in final) #convert string list into string
