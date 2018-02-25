@@ -1,0 +1,15 @@
+def rotate(self,matrix):
+        upp,dow,lef,rig = 0,len(matrix)-1,0,len(matrix)-1
+        while upp < dow and lef < rig:
+            sh = lef
+            while sh < rig:
+                temp = matrix[upp][sh]
+                matrix[upp][sh] = matrix[-sh-1][lef]
+                matrix[-sh-1][lef] = matrix[dow][-sh-1]
+                matrix[dow][-sh-1] = matrix[sh][rig]
+                matrix[sh][rig] = temp
+                sh += 1
+            upp += 1
+            dow -= 1
+            lef += 1
+            rig -= 1
