@@ -1,0 +1,15 @@
+def sort_string(self,strs):
+        a = [i for i in strs]
+        a.sort()
+        return ''.join(a)
+    
+    def groupAnagrams(self,strs):
+        sol_set,solution = dict(),[]
+        for x in strs:
+            if self.sort_string(x) in sol_set.keys():
+                sol_set[self.sort_string(x)].append(x)
+            else:
+                sol_set[self.sort_string(x)] = [x]
+        for x in sol_set.values():
+            solution.append(x)
+        return solution
