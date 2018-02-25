@@ -1,0 +1,20 @@
+    def spiralOrder(self,matrix):
+        if len(matrix) == 0:
+            return []
+        upp,bot,lef,rig,solution = 0,len(matrix)-1,0,len(matrix[0])-1,[]
+        while upp <= bot and lef <= rig:
+            for i in range(lef,rig+1):
+                solution.append(matrix[upp][i])
+            for i in range(upp+1,bot+1):
+                solution.append(matrix[i][rig])
+            if bot > upp: #avoid doing again if bot row is equal to upp row !
+                for i in range(rig-1,lef-1,-1):
+                    solution.append(matrix[bot][i])
+            if rig > lef: #avoiding doing if left column is equal to right column !
+                for i in range(bot-1,upp,-1):
+                    solution.append(matrix[i][lef])
+            upp += 1
+            bot -= 1
+            lef += 1
+            rig -= 1
+        return solution
