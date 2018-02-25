@@ -1,0 +1,14 @@
+def permute_recursive(self,nums,solution_set,final_solution):
+        if len(nums) == len(solution_set) and solution_set not in final_solution: #check if viable solution set is been found
+            final_solution.append(solution_set[:])
+        else:
+            for ele in nums:
+                if ele not in solution_set:
+                    solution_set.append(ele)
+                    self.permute_recursive(nums,solution_set,final_solution)
+                    solution_set.pop()
+                    
+    def permute(self, nums):
+        solution_set,final_solution = [],[]
+        self.permute_recursive(nums,solution_set,final_solution)
+        return final_solution
