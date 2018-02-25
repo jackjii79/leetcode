@@ -1,0 +1,11 @@
+def permuteUnique(self, nums):
+        final_solution = [[]]
+        for n in nums:
+            solution_set = []
+            for sol in final_solution:
+                for i in range(0,len(sol)+1):
+                    solution_set.append(sol[:i]+[n]+sol[i:])
+                    if i < len(sol) and sol[i] == n: #check if duplicated permutation might exist
+                        break
+            final_solution = solution_set
+        return final_solution
