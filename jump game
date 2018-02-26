@@ -1,0 +1,12 @@
+def canJump(self, nums):
+        if len(nums) < 2:
+            return True
+        distance,reachable = 1,True
+        for i in range(len(nums)-2,-1,-1):
+            if nums[i] < distance:
+                distance += 1
+                reachable = False
+            else:
+                distance = 1
+                reachable = True
+        return reachable
