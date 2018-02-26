@@ -1,0 +1,23 @@
+def merge(self,intervals):
+        sorted_tuple_list,solution_list,index,start = [],[],1,0
+        for x in intervals:
+            sorted_tuple_list.append((x.start,1))
+            sorted_tuple_list.append((x.end,2))
+        sorted_tuple_list.sort(key=lambda x:x[0])
+        lef,rig = 1,0
+        while index < len(sorted_tuple_list):
+            #pass all following left type value since we only care about the first left value
+            while index < len(sorted_tuple_list) and sorted_tuple_list[index][1] == 1:
+                index += 1
+                lef += 1
+            #pass all previous right type value since we only care about the last right value
+            while index < len(sorted_tuple_list) and sorted_tuple_list[index][1] != 1:
+                index += 1
+                rig += 1
+            #consider 1) right value equal to next left value; 2) #left does not equal to #right; if so, we simply go back to repeat
+            if index < len(sorted_tuple_list) and sorted_tuple_list[index][1] == 1 and sorted_tuple_list[index-1][1] == 2 and sorted_tuple_list[index][0] == sorted_tuple_list[index-1][0] or rig != lef:
+                continue        
+            #otherwise we are sure that we found the correct right value of new merged interval and update a new next left index in next loop
+            solution_list.append([sorted_tuple_list[start][0],sorted_tuple_list[index-1][0]])
+            start = index
+        return solution_list
