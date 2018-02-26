@@ -1,0 +1,16 @@
+def setZeroes(self,matrix):
+        if len(matrix) == 0 or len(matrix[0]) == 0:
+            return 
+        zerocolumn = []
+        for row in range(len(matrix)):
+            containzero = False
+            for col in range(len(matrix[0])):
+                if matrix[row][col] == 0: #check if row contains zero elements
+                    containzero = True
+                    if col not in zerocolumn: #1) mark all columns contain zero elements
+                        zerocolumn.append(col)
+            if containzero == True: #2) set all rows with zero elements be zeroes
+                matrix[row] = [0] * len(matrix[0])
+        for col in zerocolumn: #3) set all columns with zero elements be zeroes according to zerocolumn
+            for row in range(len(matrix)):
+                matrix[row][col] = 0
