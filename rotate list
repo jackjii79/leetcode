@@ -1,0 +1,18 @@
+def rotateRight(self,head,k):
+        first,second,preserve_first,preserve_second,i = head,head,head,head,0
+        while second != None and i < k:
+            second = second.next
+            i += 1
+            if i < k and second == None: #when k bigger than the length of the list, we get the remaining of k%i and recompute second pointer initial position again !
+                k = k % i
+                i = 0
+                second = head
+        if second == None or k == 0: #if second reach None which means k is equal to the length of list,then nothing change; so does when k is zero
+            return head
+        while second != None:
+            preserve_first,preserve_second = first,second
+            first,second = first.next,second.next
+        preserve_second.next = head
+        head = first
+        preserve_first.next = None
+        return head
