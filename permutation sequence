@@ -1,0 +1,9 @@
+def getPermutation(self,n,k): #k is index within n! permutation
+        i,solution,index,remain = n,"",k,[x for x in range(1,n+1)]
+        while len(remain) != 0:
+            rank = math.ceil(index / math.factorial(i-1)) #get corresponding index rank in array
+            solution += str(remain[rank-1]) #append that number into solution
+            remain[rank-1:rank] = [] #update arraying by removing that number
+            index = index - (rank - 1) * math.factorial(i-1) #update index to be a new local index within corresponding (n-1)! permutations
+            i -= 1 #update number of remaining numbers in the sequence
+        return solution
