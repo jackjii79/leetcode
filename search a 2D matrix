@@ -1,0 +1,31 @@
+def searchMatrix(self, matrix, target):
+        if len(matrix) == 0 or len(matrix[0]) == 0:
+            return False
+        upp,bot,lef,rig,tar_row = 0,len(matrix)-1,0,len(matrix[0])-1,0
+        #ascertain target row
+        while upp < bot:
+            if target > matrix[upp][rig] and target < matrix[bot][lef]:
+                upp += 1
+                bot -= 1
+            elif target < matrix[upp][rig]:
+                tar_row = upp
+                break
+            elif target > matrix[bot][lef]:
+                tar_row = bot
+                break
+            elif target == matrix[upp][rig] or target == matrix[bot][lef]:
+                return True
+        if upp > bot:
+            return False
+        if upp == bot:
+            tar_row = upp
+        #apply binary search to ascertain target column
+        while lef <= rig:
+            middle = int((lef+rig)/2)
+            if matrix[tar_row][middle] == target:
+                return True
+            elif matrix[tar_row][middle] > target:
+                rig = middle - 1
+            else:
+                lef = middle + 1
+        return False
