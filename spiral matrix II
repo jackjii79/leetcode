@@ -1,0 +1,23 @@
+def generateMatrix(self,n):
+        solution_matrix = [[0 for j in range(n)] for i in range(n)]
+        upp,bot,lef,rig,counter = 0,n-1,0,n-1,1
+        while upp <= bot and lef <= rig:
+            for i in range(lef,rig+1):
+                solution_matrix[upp][i] = counter
+                counter += 1
+            for i in range(upp+1,bot+1):
+                solution_matrix[i][rig] = counter
+                counter += 1
+            if upp < bot:
+                for i in range(rig-1,lef-1,-1):
+                    solution_matrix[bot][i] = counter
+                    counter += 1
+            if lef < rig:
+                for i in range(bot-1,upp,-1):
+                    solution_matrix[i][lef] = counter
+                    counter += 1
+            upp += 1
+            bot -= 1
+            lef += 1
+            rig -= 1
+        return solution_matrix
