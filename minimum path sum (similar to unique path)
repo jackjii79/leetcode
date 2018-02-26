@@ -1,0 +1,13 @@
+def minPathSum(self,grid):
+        if len(grid) == 0 or len(grid[0]) == 0:
+            return 0
+        solution = [grid[i][:] for i in range(len(grid))]
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if i == 0 and j > 0:
+                    solution[i][j] += solution[i][j-1]
+                elif j == 0 and i > 0:
+                    solution[i][j] += solution[i-1][j]
+                elif i > 0 and j > 0:
+                    solution[i][j] += min(solution[i-1][j],solution[i][j-1]) 
+        return solution[len(grid)-1][len(grid[0])-1]
