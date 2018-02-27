@@ -2,9 +2,9 @@ def subsets(self, nums):
         solution = [[]]
         if len(nums) == 0:
             return solution
-        sorted_list = sorted(nums)
+        sorted_list = sorted(nums) #to simplify, we sort input array
         for k in range(1,len(nums)+1):
-            init_set,traverse_stack = [i for i in range(k)],[]
+            init_set,traverse_stack = [i for i in range(k)],[] #note solution here store position index instead of member of input array since input array is not necessarily be [1..n]
             last_solution = init_set[:]
             solution.append([sorted_list[i] for i in last_solution])
             for pos in range(k-1,-1,-1):
