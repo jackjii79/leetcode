@@ -1,0 +1,31 @@
+def search(self,num,target):
+        if len(num) == 0:
+            return False
+        lef,rig,start_index,end_index = 0,len(num)-1,0,0
+        if target == num[0] or target == num[len(num)-1]:
+            return True
+        elif target < num[0] and target > num[len(num)-1]:
+            return False
+        #find the turning point !
+        while lef+1 < len(num) and num[lef] <= num[lef+1]:
+            lef += 1
+        #there might not have the turning point !
+        if lef+1 == len(num):
+            start_index,end_index = 0,lef
+        #we found the turning point !
+        elif num[lef] > num[lef+1]:
+            if target > num[0]:
+                start_index,end_index = 0,lef
+            elif target < num[len(num)-1]:
+                start_index,end_index = lef+1,len(num)-1
+        #let start_index and end_index be sorted array leftmost and rightmost position, we use binary search to solve !
+        while start_index <= end_index:
+            middle_index = int((start_index+end_index)/2)
+            if target == num[middle_index]:
+                return True
+            elif target > num[middle_index]:
+                start_index = middle_index + 1
+            else:
+                end_index = middle_index - 1
+        return False
+        
