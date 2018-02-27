@@ -1,0 +1,35 @@
+def combine(self, n, k):
+        if k > n or k <= 0:
+            return []
+        solution = [[i for i in range(1,k+1)]]
+        last_solution = solution[-1][:]
+        traverse_stack = []
+        for pos in range(k-1,-1,-1): #traverse from right to left
+            traverse_stack.append(pos)
+            while len(traverse_stack) != 0:
+                if last_solution[traverse_stack[-1]] + k - traverse_stack[-1] <= n: #check if value of current pos index can increment by 1
+                    while last_solution[traverse_stack[-1]] + k - traverse_stack[-1] <= n:
+                        tpos = traverse_stack[-1]
+                        last_solution[tpos] += 1
+                        for p in range(tpos+1,k): #we update all position index of the left side, we call affected pos
+                            traverse_stack.append(p) #we push each affected pos index into stack
+                            last_solution[p] = last_solution[p-1] + 1
+                        solution.append(last_solution[:])
+                else: #if not we pop that position index from the stack
+                    traverse_stack.pop()
+        return solution
+        
+ #recursive version
+ def combine_recursive(self,solution,combo,s,e,k):
+        if len(combo) == k:
+            solution.append(combo[:])
+            return
+        for i in range(s,e):
+            combo.append(i)
+            self.combine_recursive(solution,combo,i+1,e,k)
+            combo.pop()
+            
+    def combine(self, n, k):
+        solution_list,combo = [],[]
+        self.combine_recursive(solution_list,combo,1,n+1,k)
+        return solution_list
