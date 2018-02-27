@@ -1,0 +1,10 @@
+def sortColors(self,nums):
+        color_list,index = [0 for i in range(3)],0
+        for i in nums:
+            color_list[i] += 1
+        for x in range(3):
+            i = 0
+            while i < color_list[x]:
+                nums[index] = x
+                i += 1
+                index += 1
