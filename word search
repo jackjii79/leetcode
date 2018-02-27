@@ -1,0 +1,19 @@
+def exist_recursive(self,board,word,bot,rig,row,col):
+        if len(word) == 0:
+            return True
+        if row >= bot or col >= rig or row < 0 or col < 0 or board[row][col] != word[0]:
+            return False
+        preserve = board[row][col]
+        board[row][col] = "#"
+        result = self.exist_recursive(board,word[1:],bot,rig,row+1,col) or self.exist_recursive(board,word[1:],bot,rig,row-1,col) or self.exist_recursive(board,word[1:],bot,rig,row,col+1) or self.exist_recursive(board,word[1:],bot,rig,row,col-1)
+        board[row][col] = preserve
+        return result
+        
+    def exist(self, board, word):
+        if not board:
+            return False
+        for i in range(len(board)):
+            for j in range(len(board[i])):
+                if self.exist_recursive(board,word,len(board),len(board[i]),i,j) == True:
+                    return True
+        return False
