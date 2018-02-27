@@ -1,0 +1,17 @@
+def removeDuplicates(self,nums):
+        if len(nums) == 0:
+            return 0
+        length,index = 1,1
+        while index < len(nums):
+            counter = 1
+            if nums[index] == nums[index-1]:
+                length += 1
+                while index < len(nums) and nums[index] == nums[index-1]:
+                    counter += 1
+                    if counter > 2:
+                        nums[index:index+1] = [] #remove duplicated element that are more than two
+                    else:
+                        index += 1
+            else:
+                length += 1
+                index += 1
