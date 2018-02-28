@@ -21,7 +21,8 @@ def subsets(self, nums):
                     else:
                         traverse_stack.pop()
         return solution
-        
+ #see comments
+ 
  recursive version:
  def subsets_recursive(self, nums, solution_set, combo, x):
         if combo not in solution_set:
@@ -36,3 +37,4 @@ def subsets(self, nums):
         solution_set, combo = [], []
         self.subsets_recursive(nums,solution_set,combo,0)
         return solution_set
+    
