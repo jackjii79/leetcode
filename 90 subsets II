@@ -1,0 +1,43 @@
+def subsetsWithDup(self, nums):
+        nums.sort()
+        n,solution,recursive_stack = len(nums),[[]],[]
+        for k in range(1,len(nums)+1):
+            last_solution = [i for i in range(k)]
+            solution.append([nums[i] for i in last_solution])
+            for pos in range(k-1,-1,-1):
+                recursive_stack.append(pos)
+                while len(recursive_stack) != 0:
+                    if last_solution[recursive_stack[-1]] + k - recursive_stack[-1] < len(nums):
+                        while last_solution[recursive_stack[-1]] + k - recursive_stack[-1] < len(nums):
+                            #check if adjacent cells are identical, if so we increment by 1 to enter next loop
+                            if nums[last_solution[recursive_stack[-1]]] == nums[last_solution[recursive_stack[-1]]+1]:
+                                last_solution[recursive_stack[-1]] += 1
+                            else:
+                                last_solution[recursive_stack[-1]] += 1
+                                tpos = recursive_stack[-1]
+                                for x in range(tpos+1,k):
+                                    recursive_stack.append(x)
+                                    last_solution[x] = last_solution[x-1] + 1
+                                solution.append([nums[i] for i in last_solution])
+                        #if following elemnts are all identical, then we pop up as failure to increment !
+                        if last_solution[recursive_stack[-1]] + k - recursive_stack[-1] == len(nums) and nums[last_solution[recursive_stack[-1]]] == nums[last_solution[recursive_stack[-1]]-1]:
+                            recursive_stack.pop()
+                    else:
+                        recursive_stack.pop()
+        return solution
+        
+ recursive version:
+ def subset_recursive(self,nums,solution,combo,index):
+        if combo not in solution:
+            solution.append(combo[:])
+            
+        for i in range(index,len(nums)):
+            combo.append(nums[i])
+            self.subset_recursive(nums,solution,combo,i+1)
+            combo.pop()
+        
+    def subsetsWithDup(self, nums):
+        solution, combo = [], []
+        nums.sort()
+        self.subset_recursive(nums,solution,combo,0)
+        return solution
