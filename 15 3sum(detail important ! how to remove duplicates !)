@@ -1,0 +1,23 @@
+def threeSum(self, nums):
+        final_solution = []
+        nums.sort()
+        for first in range(len(nums)-2):
+            second,third = first + 1,len(nums) - 1
+            if first-1 >= 0 and nums[first] == nums[first-1]: #avoid duplicate elements
+                continue
+            while third > second:
+                threesum = nums[first] + nums[second] + nums[third]
+                if threesum == 0:
+                    solution = [nums[first],nums[second],nums[third]]
+                    final_solution.append(solution)
+                    while third > second and nums[third] == nums[third-1]: #avoid duplicate elements
+                        third -= 1
+                    while third > second and nums[second] == nums[second+1]: #avoid duplicate elements
+                        second += 1
+                    second += 1
+                    third -= 1
+                elif threesum > 0:
+                    third -= 1
+                else:
+                    second += 1
+        return final_solution
