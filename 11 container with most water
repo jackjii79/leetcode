@@ -1,0 +1,14 @@
+def maxArea(self, height):
+        #max_size represents largest size so far, current_size represents current round size and current_height represents highest shorter height we have seen so far.
+        left,right,max_size,current_size,current_height = 0,len(height)-1,-10,0,-10
+        while right > left:
+            if min(height[left],height[right]) > current_height:
+                current_size = (right - left) * min(height[left],height[right])
+                current_height = min(height[left],height[right])
+                if current_size > max_size:
+                    max_size = current_size
+            if min(height[left],height[right]) == height[left]: #we let shorter line move forwards
+                left += 1
+            else:
+                right -= 1
+        return max_size
