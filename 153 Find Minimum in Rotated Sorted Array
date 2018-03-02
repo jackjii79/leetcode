@@ -1,0 +1,16 @@
+    def findMin(self, nums):
+        if len(nums) == 1:
+            return nums[0]
+        left,right = 0,len(nums)-1
+        while left < right:
+            middle = int((left+right)/2)
+            if nums[middle] >= nums[left] and nums[middle] < nums[right]: #make sure left is the smallest !
+                return nums[left]
+            elif nums[middle] >= nums[left] and nums[middle] > nums[right]:
+                left = middle + 1
+                if left == right: #make sure right is the smallest !
+                    return nums[left]
+            elif nums[middle] < nums[left] and nums[middle] < nums[right]:
+                right = middle - 1
+                if left == right or nums[middle] < nums[right]: #make sure middle is the smallest !
+                    return nums[middle]
