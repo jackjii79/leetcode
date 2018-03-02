@@ -1,0 +1,12 @@
+def combin_recursive(self,k,n,index,result,solution):
+        if n == 0 and len(result) == k:
+            solution.append(result[:])
+        elif len(result) < k:
+            for i in range(index,10):
+                if n >= i:
+                    self.combin_recursive(k,n-i,i+1,result+[i],solution)
+        
+    def combinationSum3(self, k, n):      
+        solution = []
+        self.combin_recursive(k,n,1,[],solution)
+        return solution
