@@ -1,0 +1,24 @@
+def threeSumClosest(self, nums, target):
+        nums.sort()
+        global_closest_diff,global_sum = math.inf,0
+        for first in range(len(nums)-2):
+            second,third = first + 1,len(nums)-1
+            if first - 1 >= 0 and nums[first] == nums[first-1]:
+                continue
+            while second < third:
+                threesum = nums[first] + nums[second] + nums[third]
+                if threesum >= target:
+                    while second < third and nums[first]+nums[second]+nums[third] >= target: #advance third to find turning point !
+                        if threesum == target:
+                            return target
+                        third -= 1
+                    if abs(nums[first]+nums[second]+nums[third+1]-target) < global_closest_diff:
+                        global_sum = nums[first]+nums[second]+nums[third+1]
+                        global_closest_diff = abs(nums[first]+nums[second]+nums[third+1]-target)
+                else:
+                    while second < third and nums[first]+nums[second]+nums[third] < target: #advance second to find turning point !
+                        second += 1
+                    if abs(nums[first]+nums[second-1]+nums[third]-target) < global_closest_diff:
+                        global_sum = nums[first]+nums[second-1]+nums[third]
+                        global_closest_diff = abs(nums[first]+nums[second-1]+nums[third]-target)
+        return global_sum
