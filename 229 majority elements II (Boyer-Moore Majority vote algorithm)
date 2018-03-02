@@ -1,0 +1,16 @@
+def majorityElement(self, nums):
+        candi1,candi2,count1,count2,n = math.inf,math.inf,0,0,len(nums) #candi1 and candi2 be two major elements
+        for x in nums:
+            if count1 == 0 and x != candi2: #make sure candi2 will not replace candi1
+                candi1 = x
+            elif count2 == 0 and x != candi1: #make sure candi1 will not replace candi2
+                candi2 = x
+            if candi1 == x:
+                count1 += 1
+            elif candi2 == x:
+                count2 += 1
+            elif candi1 != x and candi2 != x: #all other elements other than candi1 and candi2 will decrease both counters
+                count1 -= 1
+                count2 -= 1
+        return [n for n in set([candi1,candi2]) if nums.count(n) > int(len(nums)/3)]
+        
