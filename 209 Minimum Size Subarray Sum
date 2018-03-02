@@ -1,0 +1,31 @@
+    def minSubArrayLen(self, s, nums):
+        if len(nums) == 0 or sum(nums) < s:
+            return 0
+        result,cum_sub,xsum = math.inf,[],0
+        #compute sum of subarray
+        for x in range(len(nums)):
+            xsum += nums[x]
+            cum_sub.append(xsum)
+        #let x be a fix point indicating the starting position of subarray
+        for x in range(len(cum_sub)):
+            left,right,substract,index_min = x,len(cum_sub)-1,0,math.inf
+            if x-1 >= 0:
+                substract = cum_sub[x-1] #substract is the part we need to remove since we shift the starting pos x, thus
+all aforehand pos (1..x-1) need to be substracted !
+            while left <= right:
+                middle = int((left+right)/2)
+                if cum_sub[middle]-substract < s:
+                    left = middle + 1
+                elif cum_sub[middle]-substract == s:
+                    index_min = middle - x + 1
+                    break
+                else:
+                    right = middle - 1
+                    if middle-1 >= x and cum_sub[middle-1]-substract < s or middle == x: #check if middle is the turning point where
+  value of sum before that is less than target, if so then middle is our desired pos,alternatively middle is the leftmost pos of search
+  domain
+                        index_min = middle -x + 1
+                        break
+            result = min(result,index_min)
+        return result
+                
