@@ -1,0 +1,28 @@
+def productExceptSelf(self, nums):
+        result = []
+        multipy_forward,multipy_backward,product1,product2 = [],[],1,1
+        for i,j in zip(range(len(nums)-1),range(len(nums)-1,0,-1)):
+            product1,product2 = product1*nums[i],product2*nums[j]
+            multipy_forward.append(product1)
+            multipy_backward.append(product2)
+        for i in range(len(nums)):
+            if i == 0:
+                product1,product2 = 1,multipy_backward[-1-i]
+            elif i > 0 and i < len(nums)-1:
+                product1,product2 = multipy_forward[i-1],multipy_backward[-1-i]
+            else:
+                product1,product2 = multipy_forward[-1],1
+            result.append(product1*product2)
+        return result
+   
+    #constant space complexity
+    def productExceptSelf(self,nums):
+        result,product = [],1
+        for x in nums:
+            result.append(product)
+            product *= x
+        product = 1
+        for i in range(len(nums)-1,-1,-1):
+            result[i] *= product
+            product *= nums[i]
+        return result
