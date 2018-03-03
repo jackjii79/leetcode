@@ -1,0 +1,32 @@
+#solution 1:sorting
+    def findDuplicate(self, nums):
+        nums.sort()
+        for i in range(1,len(nums)):
+            if nums[i] == nums[i-1]:
+                return nums[i]
+    '''
+    #solution 2:bash table
+    def findDuplicate(self,nums):
+        btable = [0 for i in range(n+1)]
+        for x in nums:
+            btable[x] += 1
+            if btable[x] > 1:
+                return x
+    '''
+    #solution 3:satisfy all assumption
+    def findDuplicate(self, nums):
+        if len(nums) < 2:
+            return None
+        slow_point,fast_point = 0,0
+        #detect if cycle exists
+        while True:
+            slow_point = nums[slow_point]
+            fast_point = nums[nums[fast_point]]
+            if slow_point == fast_point:
+                break
+        #find the entrance point of the cycle
+        ptr1,ptr2 = 0,slow_point
+        while ptr1 != ptr2:
+            ptr1 = nums[ptr1]
+            ptr2 = nums[ptr2]
+        return ptr1
