@@ -1,0 +1,17 @@
+def detectCycle(self, head):
+        slow,fast = head,head
+        while slow != None and fast != None:
+            slow = slow.next
+            if fast.next != None:
+                fast = fast.next.next
+            else:
+                return None
+            if fast == slow:
+                break
+        if slow == None or fast == None:
+            return None
+        ptr1,ptr2 = head,fast
+        while ptr1 != ptr2:
+            ptr1 = ptr1.next
+            ptr2 = ptr2.next
+        return ptr1
