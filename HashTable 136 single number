@@ -1,0 +1,23 @@
+#O(n) space by using hash table
+    '''
+    def singleNumber(self, nums):
+        dict_list = dict()
+        for i in nums:
+            try:
+                dict_list[i].pop()
+                del dict_list[i]
+            except:
+                dict_list[i] = [1]
+        for a,b in dict_list.items():
+            return a
+    
+    #O(n) space 2*(a+b+c) - (a+a+b+b+c) = c where c is the single one we are looking for
+    def singleNumber(self, nums):
+        return 2*sum(set(nums)) - sum(nums)
+    '''
+    #O(1) space, use XOR ops towards each element since a^0 = a; a^a = 0; a^a^b = b
+    def singleNumber(self, nums):
+        res = nums[0]
+        for i in range(1,len(nums)):
+            res ^= nums[i]
+        return res
