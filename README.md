@@ -12,7 +12,9 @@ for i in range(x):
  abc -= x
  
  problem categories:
- One. two pointers problem:
+ 
+ One: two pointers problem
+ 
  1 forward pointers(同向)
  
  1) windows pointers:
@@ -57,3 +59,15 @@ for i in range(x):
  if sort is allowed, then we sort all arrays and put all possible solutions into heap and traverse one by one until we reach the kth one;
  if sort is not allowed, then we maintain a min/max heap among k elements to find the smallest/biggest among k-max/min heap.
  
+ 
+Two: Search problem(up/down/left/right)
+given a matrix, position can move in four directions. Such problem often can be solved in a recursive manner
+
+Sample code:
+def recursive_call(..,row,col): row/col indicates position information of the moving pointer in the matrix
+ if condition I not satisfy:
+   return
+ if condition I satisfy:
+   matrix[row][col] set something that can not satisfy condition I to prevent move back
+   result = recursive_call(..,row+1,col) or recursive_call(..,row-1,col) or ...
+   reset matrix[row][col] to be origin
