@@ -71,3 +71,21 @@ def recursive_call(..,row,col): row/col indicates position information of the mo
    matrix[row][col] set something that can not satisfy condition I to prevent move back
    result = recursive_call(..,row+1,col) or recursive_call(..,row-1,col) or ...
    reset matrix[row][col] to be origin
+   
+Three: Hash table application problem
+1 compute hashvalue for string match:
+let base=10/163(constant number) given a string s where s[0],...,s[N-1] N is the length of string s
+hashtable[0] = 0; hashtable[1] = s[0]; hashtable[2] = base * hashtable[1] + s[1]
+in general, hashtable[i] = hashtable[i-1]*base + s[i], hashtable[N-1] indicate the hash value for the whole input string s !
+hashtable[i] = s[1]*base^i + s[2]*base^(i-1) + ... + s[i]
+compute the range of hashtable from l to r: hashtable[l,r] = hashtable[r] - hashtable[l-1]*x^(r-l+1)
+
+2 use hashtable to find occurrence of certain element in the input array
+if given input array has N element and each element is between [1,N] then we can use each element as key of the hashtable to check if certain element appears in the array. The assumption is that input array can be modified !
+
+sample code:
+for x in input_array:
+   if input_array[abs(x)] < 0:
+      perform action (abs(x) has been seen before thus munus)
+   else:
+      input_array[abs(x)] = 0 - abs(input_array[abs(x)]) (first time seen, thus set minus !)
