@@ -3,3 +3,8 @@ None type of python object can not be iterate !
 if a != None:
   for x in a:
     ...
+2
+When consider the problem of graph, given nodes and their associated nodes(edge), we need to consider the case that
+when the node is a isolated one, which means no associated edges can be founded !!!
+If the requirement is to return the list of connected component like [[a,b,c],[d,e],...], we should use a dict() firstly to store 
+all nodes as key and its value is the key iteself to avoid missing those isolated nodes as a special case of connected components
