@@ -1,0 +1,5 @@
+1
+None type of python object can not be iterate !
+if a != None:
+  for x in a:
+    ...
