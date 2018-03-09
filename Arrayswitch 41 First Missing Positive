@@ -1,0 +1,14 @@
+def firstMissingPositive(self, nums):
+        for index in range(len(nums)):
+            x = nums[index]
+            while x >= 1 and x <= len(nums) and x != nums[x-1]: #we swap x and nums[x-1] until either x is in position x-1th or x
+            is out of range [1..N], by doing so we are guarantee that all integer from 1..N is in position except the missing ones
+                temp = nums[x-1]
+                nums[x-1] = x
+                nums[index] = temp
+                x = nums[index]
+        for index in range(len(nums)): #we check which one x is not equal to nums[x-1], and that one is the missing positive integer
+            if nums[index] != index+1:
+                return index+1
+        return len(nums)+1 #if all is in position, we return the last one
+        
