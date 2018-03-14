@@ -60,7 +60,7 @@ for i in range(x):
  if sort is not allowed, then we maintain a min/max heap among k elements to find the smallest/biggest among k-max/min heap.
  
  
-Two: Search problem(up/down/left/right)
+Two: Search problem(up/down/left/right) DFS algo
 given a matrix, position can move in four directions. Such problem often can be solved in a recursive manner
 
 Sample code:
@@ -89,3 +89,68 @@ for x in input_array:
       perform action (abs(x) has been seen before thus munus)
    else:
       input_array[abs(x)] = 0 - abs(input_array[abs(x)]) (first time seen, thus set minus !)
+      
+      
+ Three important advanced data structure !!!
+ 1 Segment Tree: master three kinds of operations (build a segment tree + query a segment tree + update a segment tree)
+ build a segment tree:
+ if start == end:
+            return SegmentTreeNode(start,end,A[start])
+        elif start > end:
+            return None
+        else:
+            middle = int((start+end)/2)
+            root = SegmentTreeNode(start,end,0)
+            root.left = self.dfs_build(start,middle,A)
+            root.right = self.dfs_build(middle+1,end,A)
+            root.max = max(root.left.max,root.right.max)
+            return root
+            
+ query a segment tree:
+ if root == None or start > end:
+            return 0
+        elif root.start >= start and root.end <= end: # we do not use "==" since we need to consider the case when range [start,end] is bigger than node range(root.start,root.end)
+            return root.count
+        else:
+            middle,leftcount,rightcount = int((root.start+root.end)/2),0,0
+            if middle >= start: #if [start,end] resides on left sub tree
+                if middle >= end: #if [start,end] completely resides on left sub tree
+                    leftcount = self.query(root.left, start, end)
+                else: #[start,end] partial resides on left sub tree
+                    leftcount = self.query(root.left, start, middle)
+            if middle < end: #if [start,end] resides on right sub tree
+                if middle < start: #if [start,end] completely resides on right sub tree
+                    rightcount = self.query(root.right, start, end)
+                else: #[start,end] partial resides on right sub tree
+                    rightcount = self.query(root.right, middle+1, end)
+            return leftcount + rightcount
+            alternatively,
+            middle = int((root.start+root.end)/2)
+            if root.left.end >= end: #if query range is completely resides on the left sub tree
+               return self.query(root.left, start, end)
+            if start >= root.right.start: if query range is completely resides on the right sub tree
+               return self.query(root.right, start, end)
+            return self.query(root.left, start, middle) + self.query(root.right, middle+1, end) #paritially redies on both sub trees
+            
+update a segment tree:
+if index >= 0 and index == root.start and index == root.end:
+            root.max = value
+        elif index < root.start or index > root.enniod:
+            return 
+        else: #find the range of index treenode to see whether it resides on left sub tree or right sub tree
+            middle = int((root.start+root.end)/2)
+            if index <= middle and index >= root.start:
+                self.modify(root.left,index,value)
+            elif index <= root.end and index > middle:
+                self.modify(root.right,index,value)
+            root.max = max(root.left.max, root.right.max)
+            
+Summary: we can use segment to solve range sum proble; number of elements bigger/smaller than a certain given number in a list;
+all problems related to find the min/max/sum of a consecutive range in a list
+note: if we could change the scope of the range by deleting/updating the value of certain treenodes, then we can not use segment tree structure
+
+
+2 Union set: master two kinds of operations (find the parent node id of a given node + union two separate nodes)
+
+ 
+ 
