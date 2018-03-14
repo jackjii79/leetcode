@@ -152,5 +152,27 @@ note: if we could change the scope of the range by deleting/updating the value o
 
 2 Union set: master two kinds of operations (find the parent node id of a given node + union two separate nodes)
 
+  find a parent node with path compression:
+  union_find(self, union_set, index):
+     while index != union_set[index]:
+        union_set[index] = union_set[union_set[index]]
+        index = union_set[index]
+     return index
+     
+  merge two separate node into the same set(only change their father relation老大哥关系改变) with union size:
+  union_merge(self, union_set, union_size, index_a, index_b):
+     root_a, root_b = union_find(union_set, index_a), union_find(union_set, index_b)
+     if root_a != root_b:
+        if union_size[root_a] < union_size[root_b]:
+           union_set[root_a] = root_b
+           union_size[root_b] += union_size[root_a]
+        else:
+           union_set[root_b] = root_a
+           union_size[root_a] += union_size[root_b]
+  
+  Summary: we can use union set data structure to solve connected graph problem(connected component -- cycle/tree -- not cycle), to decide if a graph is a tree or a connected component, if two nodes that already in the same set are merged again then a cycle will formed, otherwise it is only a tree;
+  Hard problem: 1) surrounded region:we scan the input board using DFS in four directions and to decide if we change all "O" to "X", we need to check boarder, if any "O" is on the edge then we do nothing and put all "O" positions into scan_set to avoid rescanning, otherwise we change all "O" into "X" and put those into scan set as well.
+  
+  2) number of islands II:(I can be solved using DFS in four directions) we use union set structure to solve this problem, we first need to convert 2-dimension board position into one dimension index and vice versa; we doing this in a manner of sequential order as we read new island from input list, we consider four cases:1) total number of islands unchanged if all islands adjacent to the new island are belong to the same set 2) total number of islands increase by one if there is no island adjacent to the new island in any four directions 3) total number of islands decrease by one if there are two islands adjacent to the new island in two of four directions and they both not the same set 4) total number of islands decrease by two if there are three islands adjacent to the new island in three out of four directions and they all belong to different sets 5) total number of islands decrease by three if there are four islands adjacent to the new island in four directions and they all belong to different sets
  
  
