@@ -11,6 +11,8 @@ for i in range(x):
  self.recursive(abc)
  abc -= x
  
+ we often use the first form where abc+x as parameters instead of change the value of variable of abc, when we return from the deeper level of recursive call, abc will not change, which means the same abc can be used in next for loop round, this is the core to master the spirit of DFS algo !!
+ 
  problem categories:
  
  One: two pointers problem
