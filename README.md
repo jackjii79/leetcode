@@ -244,3 +244,8 @@ At last, we append word1 and word2 into result_list and please note that we do n
 
 We need to think through that origin Trie tree represents the head part of the whole concatenation Palindrome string and the reversed Trie tree represents the end part of the whole concatenation Palindrome string , what we doing is to remove heads and tails one by one, all middle part should also be Palindrome string ! that is why we check if stack is Palindrome !!!
    
+
+Advanced data structure:
+1 HashHeap/LinkedHash: in a heap/linked list, the running time of search a specific element would be O(n), to reduce the complexity, a hashheap/linkedhash is introduced. A hashheap is a hashtable that has key value as the value of heap/linked list and its associated value is a pointer pointing to the address of that specific element in the heap/linked list.
+for example, to remove a element with value 20 in a heap, we use hashheap to locate that element and we swap that hashheap value with the last value of the hashheap(just like swap smallest/biggest element with the last one in the old heap structure) and we doing the sift up to maintain heap property then delete the last element 20.
+In python, we use collections.OrderedDict() as hashheap
