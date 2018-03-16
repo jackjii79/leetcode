@@ -1,0 +1,23 @@
+regular expression:
+dp_solution = [[False for j in range(len(p)+1)] for i in range(len(s)+1)]
+        dp_solution[len(s)][len(p)] = True
+        for i in range(len(s),-1,-1): #start from the last empty bit because we need to consider "*" case
+            for j in range(len(p)-1,-1,-1):
+                first_match = i < len(s) and p[j] in {s[i], "."}
+                if j+1 < len(p) and p[j+1] == "*":
+                    dp_solution[i][j] = dp_solution[i][j+2] or first_match and dp_solution[i+1][j]
+                else:
+                    dp_solution[i][j] = first_match and dp_solution[i+1][j+1]
+        return dp_solution[0][0]
+        
+wildcard:
+dp_solution = [[False for j in range(len(p)+1)] for i in range(len(s)+1)]
+        dp_solution[len(s)][len(p)] = True
+        for i in range(len(s),-1,-1):
+            for j in range(len(p)-1,-1,-1):
+                first_match = i < len(s) and p[j] in {s[i],"?"}
+                if p[j] == "*":
+                    dp_solution[i][j] = dp_solution[i][j+1] or i+1 < len(dp_solution) and dp_solution[i+1][j]
+                else:
+                    dp_solution[i][j] = first_match and dp_solution[i+1][j+1]
+        return dp_solution[0][0]
