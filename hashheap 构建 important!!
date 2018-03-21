@@ -21,7 +21,7 @@ class HashHeap:
             if self.hashmap[result].num > 1:
                 self.hashmap[result].num -= 1
             else:
-                if self.hashmap[result].id == len(self.min_heap)-1:
+                if self.hashmap[result].id == len(self.min_heap)-1:  ###we have to consider this case when pop element is the only one
                     self.min_heap.pop()
                     del self.hashmap[result]
                 else:
@@ -42,7 +42,8 @@ class HashHeap:
             if self.hashmap[value].num > 1:
                 self.hashmap[value].num -= 1
             else:
-                if self.hashmap[value].id == len(self.min_heap)-1:
+                if self.hashmap[value].id == len(self.min_heap)-1: #we have to consdier this case !! otherwise,value_id could be
+                invalid !!! because value could already be the last element in the heap !!!
                     del self.hashmap[value]
                     self.min_heap.pop()
                 else:
