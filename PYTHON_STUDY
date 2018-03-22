@@ -1,0 +1,6 @@
+python knowledge:
+1 how to sort with multiple keys:
+data.sort(key=lambda item: (item[1], item[0]), reverse=True)
+here, item[1] is the primary key and item[0] is the secondary key
+if we want to sort keys in different directions(increasing/decreasing) we can just use negative, like
+data.sort(key=lambda item: (item[1], 0-item[0]), reverse=True) we sort item[1] in increasing and item[0] in decreasing if ties occur
