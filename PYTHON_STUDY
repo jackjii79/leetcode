@@ -12,3 +12,18 @@ if raw_key not in self.hashtable.keys():
 here we use ordereddict to store column_key and column_value pair, using ordereddict can make us easy to return output in order!!!
 we can just do sth like: new_hash = collections.OrderedDict(sorted(self.hashtable[key].items())) where we can traverse new_hash
 in order and output in order !!!
+
+we can also sort values/keys in ordereddict:
+>>> a
+OrderedDict([(2, [3, 0]), (4, [3, 1]), (1, [1, 2])])
+we show how to sort the first element of value as the primary key and the second element of value will be the secondary key
+>>> a=collections.OrderedDict(sorted(a.items(),key=lambda item:(item[1][0],item[1][1]),reverse=True))
+>>> a
+OrderedDict([(4, [3, 1]), (2, [3, 0]), (1, [1, 2])])
+how to sort their key:
+a=collections.OrderedDict(sorted(a.items(),key=lambda item:item[0]))
+how to sort their value(if value is not a list)
+a=collections.OrderedDict(sorted(a.items(),key=lambda item:item[1]))
+
+
+
