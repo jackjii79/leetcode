@@ -5,5 +5,46 @@ Heap:
 
 Stack
 1 mono stack(单调栈)
+Application I Find Maximum in Sliding Window:
+instead of using a heap, we can use a decreasing order doubly linked list(or deque in python) working as a decreasing mono stack, which
+always give us the maximum number which is the first number in the windows consider this is a decreasing mono stack.
+with the moving of the windows:1) we check if the first index is less or equal to i - window_size where i is the iterator to decide
+if we popleft the maximum index 2) we compares the new coming index value with the smallest value in the mono stack(from right)
+we pop up all smaller elements in the stack and append new coming index in the stack
+
+sample code:
+we first fill the window up with the first window_size number of elements
+for i in xrange(0,window_size):
+ while window and input[i] >= input[window[-1]]:
+   window.pop()
+ window.append(i)
+ 
+we then continue in our loop
+for i in xrange(window_size,len(input)):
+ while window and input[i] >= input[window[-1]]:
+  window.pop()
+ if window[0] <= i - window_size:
+  window.leftpop()
+ window.append(i)
+ input[window[0]] is the maximum in the sliding window
+ 
+ Application II Max Tree & Expression Tree build:
+ requirements for max tree: 
+Given an integer array with no duplicates. A max tree building on this array is defined as follow:
+    The root is the maximum number in the array
+    The left subtree and right subtree are the max trees of the subarray divided by the root number.
+Construct the max tree by the given array.
+ requirements for Expression tree build:
+The structure of Expression Tree is a binary tree to evaluate certain expressions.
+All leaves of the Expression Tree have an number string value. All non-leaves of the Expression Tree have an operator string value.
+Now, given an expression array, build the expression tree of this expression, return the root of this expression tree.
+
+Analysis: This two problems have something in common that is we want to find the maximum value in the input array as our root of 
+subtree/tree. In expression tree build problem, we can weightize each symbol and numbers such that number have the lowest value 
+since numbers are always the leaves and +/- has higher weight than */- and */- also have higher weight than anything in ()
+
+
+
+
 
 2 stack in iterative over recursive
