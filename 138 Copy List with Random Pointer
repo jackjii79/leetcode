@@ -1,0 +1,29 @@
+def copyRandomList(self, head):
+        """
+        :type head: RandomListNode
+        :rtype: RandomListNode
+        """
+        copy_head, copy_tail, origin_pointer = None, None, head
+        while origin_pointer != None: #1) make copy of its own and insert it in the next node
+            newnode = RandomListNode(origin_pointer.label)
+            newnode.next = origin_pointer.next
+            origin_pointer.next = newnode
+            origin_pointer = newnode.next
+        origin_pointer = head
+        while origin_pointer != None: #2) make random points to all even nodes
+            copynode = origin_pointer.next
+            if origin_pointer.random != None:
+                copynode.random = origin_pointer.random.next
+            origin_pointer = copynode.next
+        origin_pointer = head
+        while origin_pointer != None: #3) detach all even nodes from origin list
+            copynode = origin_pointer.next
+            if copy_head == None:
+                copy_head = copynode
+                copy_tail = copynode
+            else:
+                copy_tail.next = copynode
+                copy_tail = copynode
+            origin_pointer.next = copynode.next
+            origin_pointer = origin_pointer.next
+        return copy_head
