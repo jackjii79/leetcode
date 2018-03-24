@@ -1,7 +1,102 @@
 Heap:
 1 hashHeap
-
+Advanced data structure that we use hashmap to map the index location of each value in the heap. Such hash+heap combination
+can gives us O(1) to find the specific value of element in the heap and manipulate it by updating/deleting.
+structure introduction:
+we use a general min/max priority queue as our heap, where stores element value, a hashmap where key is the element value and
+its value is a tuple (id, num) where id is the corresponding position index in the heap and num is the number of duplicates
+method definition:
+class hashnode:
+ def __init__(self, id, num):
+  self.id, self.num = id, num
+class hashheap:
+ def __init__(self):
+  self.heap, self.hashmap, self.currentsize = [], dict(), 0
+ 
+ def push(self, val):
+  if val in self.hashmap.keys():
+   self.hashmap[val].num += 1
+  else:
+   newnode = hashnode(len(self.heap), 1)
+   self.hashmap[val] = newnode
+   self.heap.append(val)
+   self.sift_up(len(self.heap)-1)
+  self.currentsize += 1
+ 
+ def pop(self):
+  if val in self.hashmap.keys():
+   result = self.heap[0]
+   if self.hashmap[self.heap[0]].num > 1:
+    self.hashmap[val].num -= 1
+   else:
+    if len(self.heap) == 1:
+     del self.hashmap[self.heap[0]]
+     self.heap.pop()
+    else:
+     #we first swap hashmap id and then swap heap !!!
+     self.hashmap[self.heap[0]].id, self.hashmap[self.heap[-1]].id = len(self.heap)-1, 0 
+     self.heap[0], self.heap[-1] = self.heap[-1], self.heap[0]
+     del self.hashmap[self.heap[-1]]
+     self.heap.pop()
+     self.sift_down(0)
+   self.current -= 1
+   return result
+     
+ def delete(self, val):
+  if val in self.hashmap.keys():
+   if self.hashmap[val].num > 1:
+    self.hashmap[val].num -= 1
+   else:
+    if self.hashmap[val].id == len(self.heap)-1:
+     del self.hashmap[val]
+     self.heap.pop()
+    else:
+     val_id = self.hashmap[val].id
+     #we first swap hashmap id and then swap heap !!!
+     self.hashmap[val].id, self.hashmap[self.heap[-1]].id = len(self.heap)-1, val_id
+     self.heap[val_id], self.heap[len(self.heap)-1] = self.heap[len(self.heap)-1], self.heap[val_id]
+     del self.hashmap[val]
+     self.heap.pop()
+     self.sift_up(val_id)
+     self.sift_down(val_id)
+   self.currentsize -= 1
+   
+ def sift_up(self, idx):
+  while idx != 0 and self.heap[int((idx-1)/2)] > self.heap[idx]:
+   #we first swap hashmap id and then swap heap !!!
+   self.hashmap[self.heap[int((idx-1)/2)]].id, self.hashmap[self.heap[idx]].id = self.hashmap[self.heap[idx]].id,
+   self.hashmap[self.heap[int((idx-1)/2)]].id
+   self.heap[idx], self.heap[int((idx-1)/2)] = self.heap[int((idx-1)/2)], self.heap[idx]
+   idx = int((idx-1)/2)
+   
+ def sift_down(self, idx):
+  min_id = idx
+  while idx < len(self.heap):
+   if idx*2+1 < len(self.heap) and self.heap[idx*2+1] < self.heap[idx]:
+    min_id = idx*2+1
+   if idx*2+2 < len(self.heap) and self.heap[idx*2+2] < self.heap[min_id]:
+    min_id = idx*2+2
+   if idx == min_id:
+    break
+   #we first swap hashmap id and then swap heap !!!
+   self.hashmap[self.heap[idx]].id, self.hashmap[self.heap[min_id]].id = self.hashmap[self.heap[min_id]].id,
+   self.hashmap[self.heap[idx]].id
+   self.heap[idx], self.heap[min_id] = self.heap[min_id], self.heap[idx]
+   idx = min_id
+   
+ def get_peek(self):
+  return self.heap[0]
+   
+ Application: Sliding Window Median/Maximum
+   
+   
 2 hashlinklist
+an advanced data structure that we use hashlinklist to access the specific value in the doubly linked list to give us O(1).
+The implementation is much easier than hashheap, we need a general doubly link list and everytime we insert a new node in the
+doubly link list, we use a hashtable to stores its associated value as a key and its address as our value. Once we deleted a
+node in the link list, we just delelte corresponding hashtable completely
+
+Application: LRU/LFU cache implementation
 
 Stack
 1 mono stack(单调栈)
@@ -43,8 +138,118 @@ Analysis: This two problems have something in common that is we want to find the
 subtree/tree. In expression tree build problem, we can weightize each symbol and numbers such that number have the lowest value 
 since numbers are always the leaves and +/- has higher weight than */- and */- also have higher weight than anything in ()
 
+sample code for max tree we use a decreasing stack to find the father of each node:
+for index in range(len(input)):
+ while len(mono_stack) > 0 and input[index] > input[mono_stack[-1]]: #we let the biggest node that smaller than input[index] be
+ the left child of input[index]
+   input[index].left = input[mono_stack[-1]]
+   mono_stack.pop()
+ if len(mono_stack) > 0: #we let the smallest node that bigger than input[index] be the father of input[index] and input[index] is
+ the right child of it
+   inputmono_stack[-1]].right = input[index]
+ mono_stack.append(index)
+ return mono_stack[0]
+ 
+sample code for expression build is similar, difference is we need to weightize each node before 
 
+Application III Largest Rectangle in Histogram:
+Given n non-negative integers representing the histogram's bar height where the width of each bar is 1, 
+find the area of largest rectangle in the histogram.
+Analysis: To solve this problem, we can reduce the problem to finding the first value that is smaller than itself because once
+we found a smaller value than current, which means we cannot use current anymore as the height of the rectangle. Therefore, we
+use a increasing mono stack to solve this problem
 
+sample code:
+for index in range(len(input)):
+  while len(mono_stack) > 0 and input[index]  < input[mono_stack[-1]]:
+    right_width = index - mono_stack[-1] #here we calculate the consecutive length of width on right side of top value as height
+    if len(mono_stack) > 1: #here we calculate the consecutive length of width on left side of top value as height
+      left_width = mono_stack[-1] - mono_stack[-2] - 1
+    else:
+      left_width = mono_stack[-1] - 0
+    area = (left_width + right_width) * input[mono_stack[-1]]
+    max_area = max(max_area, area)
+    mono_stack.pop()
+  mono_stack.append(index)
+ while len(mono_stack) != 0:
+   if len(mono_stack) == 1:
+     max_area = max(max_area, input[mono_stack[-1]] * len(mono_stack))
+   else:
+     max_area = max(max_area, input[mono_stack[-1]] * (mono_stack[-2] - mono_stack[-1] - 1 + len(input) - mono_stack[-1])
+   mono_stack.pop()
+ return max_area
+ 
+ Application IV Maximal Rectangle
+Given a binary tree, find the maximum path sum from root. The path may end at any node in the tree and contain at least 
+one node in it.
+Analysis: This problem can reduce to the problem of find the largest rectangle in histogram by using DP strategy line by line
+DP stragy: we consider the rectange from first line, first-second lines, first-third lines,...,first-last lines
+let dp[i] stores the maximum rectangele from 1 to i lines.
+1) if current cell at current line i is zero, we ignore and set a special flag be -1 indicating not consecutive column; 
+2) if current cell at current line i is 1, we check if special flag is -1, then reset to i and set height of current column 
+at line i is 1;
+3) if current cell at current line i is 1, we check if special flag is j where j < i and set height of current column at line i 
+is j-i+1.
+we then put those height into a subroutine similar to the solution of problem Largest Rectangle in Histogram to return the maximum
+rectangle area, we stores into dp[i]
+our DP relations formula is : dp[i] = max(dp[i-1], result from Largest Rectangle in Histogram from 1 to i line)
 
+Summary: mono stack is a technical that can help us to find the situation in an array that finding a min/max value in a 
+consecutive range or a fixed window size starting from some index position is direct or indirect to our solution.
+Application I & II is direct to our solution and Application III & IV is indirect to our solution.
+To find the max, we use the decreasing order mono stack; To find the min, we use the increasing order mono stack. The reason is
+we want what left in the corresponding mono stack is the min/max element in the array/list (decreasing mono stack left max,
+increasing mono stack left min)
 
+mono stack genral sample code is as following:
+for index in range(len(input)):
+  while mono_stack is not empty and <input[index] some condition with mono_stack[-1]>:
+    <some actions be performed with mono_stack[-1](the biggest/smallest element smaller/bigger than input[index])>
+    mono_stack.pop()
+  <other actions performed with mono_stack[-1] if mono_stack is not empty(the smallest/biggest element bigger/smaller than 
+  input[index]>
+  mono_stack.append(index)
+ while mono_stack is not empty:
+   <remaining actions be performed with what left in the stack>
+   mono_stack.pop()
+
+     
 2 stack in iterative over recursive
+we can use stack to replace recursive function calls
+Application I Expression Expand
+Given an expression s includes numbers, letters and brackets. Number represents the number of repetitions inside the 
+brackets(can be a string or another expression)．Please expand expression to be a string.
+1 recursive solution:
+we find the starting position idnex of the first "[" and the ending position index of the last "]" by using stack,then
+return num_repeat * self.recursive_expression(s[brack_start:brack_end]) + self.recursive_expression(s[brack_end:])
+
+2 iterative solution:
+we use a stack to store information
+1) if we encounter the first number, push it into the stack and also push the followed "["
+2) if we read any characters, we check if our stack is empty, we push each character into global result;
+    otherwise, we push each character into our stack
+3) if we read the first "]", we first pop up all characters from the stack and stores into a temporary string called read_s,
+   then when we pop up the first number, we let read_s = number * read_s, we then check if the stack is empty, we push
+   read_s into our global result, otherwise we push back read_s into our stack
+   
+Application II Binary Tree Maximum Path Sum II
+Given a binary tree, find the maximum path sum from root.
+The path may end at any node in the tree and contain at least one node in it.
+
+binary search tree
+max(dfs(root.left)+root.val, dfs(root.right)+root.val,root.val) represents the max sum of path where path could stop by any node 
+in the tree. Here we compare the maximum of three in cluding current level node value to indicate the case that path might stop
+by this level node, instead of keep doing dfs, we use dfs result plus root.val to calculate the sum of each level on the path !
+
+note:
+p_sum += root.val
+max(dfs(root.left,p_sum)+root.val, dfs(root.right,p_sum)+root.val, p_sum)
+is incorrect because since p_sum already contains the sum of path and when it return to its higher level call, the result will 
+add twice of that level node, which makes result bigger than reality
+ex:
+if one path sum is 45 + 39 + 11 ,p_sum = 95 which is the max sum and when it return to 11's father node which has 39 value, 
+it will make 95 + 39 again and we get 134 which is incorrect sum !!
+Thus, we should let recursive return make addtion one level by one level on its own return call
+
+
+
