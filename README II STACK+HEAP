@@ -201,6 +201,38 @@ To find the max, we use the decreasing order mono stack; To find the min, we use
 we want what left in the corresponding mono stack is the min/max element in the array/list (decreasing mono stack left max,
 increasing mono stack left min)
 
+Application V Convert Expression to Reverse Polish Notation
+For the expression [3 - 4 + 5] (which denote by ["3", "-", "4", "+", "5"]), 
+return [3 4 - 5 +] (which denote by ["3", "4", "-", "5", "+"])
+
+analysis: our goal is to put the operators with the lowest priority on the tail of the expression, therefore we can use mono stack
+to guarantee that what left in the stack are the operators with the lowest priority. Therefore, we should use a increasing stack
+with priority to store operators which including "+" "-" "*" "/* and with "()" case. 
+The precondition of mono stack is that if next operator have lower priority than the tail of the mono stack, then we pop up
+operators in the stack until we encounters one that has even lower priority than next operator which means we put all higher
+operators ahead.
+We have put all numbers into our result and weightize all operators, put them into mono stack
+
+sample code:
+while idx < len(expression):
+ if expression[idx] == "(":
+  self.base += 5
+ elif self.is_sym(expression[idx]) == True:
+  sym_stack.append([expression[idx],self.get_weight(expression[idx])+self.base])
+ elif self.is_num(expression[idx]) == True:
+  result_list.append(expression[idx])
+  while idx+1 < len(expression) and expression[idx+1] == ")": #we bypass all ")"
+   idx += 1
+   self.base -= 5
+  while idx+1 < len(expression) and len(sym_stack) > 0 and self.get_weight(expression[idx+1])+self.base <= sym_stack[-1][1]: 
+  #we doing this as a general rule to maintain the increasing order mono stack
+   sym_ops = sym_stack.pop()
+   result_list.append(sym_ops[0])
+   idx += 1
+while len(sym_stack) > 0: #all remaining in the stack are the smallest ones and push into the tail of the result list
+ sym_ops = sym_stack.pop()
+ result_list.append(sym_ops[0])
+
 mono stack genral sample code is as following:
 for index in range(len(input)):
   while mono_stack is not empty and <input[index] some condition with mono_stack[-1]>:
