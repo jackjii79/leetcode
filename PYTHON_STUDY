@@ -52,14 +52,14 @@ while number > 0:
    end = mid
  return start - 1
  
- To find a precise single point target:
+ Alternatively:
  while start <= end:
   mid = int((start+end)/2)
   if mid < target:
    start = mid + 1
   else:
    end = mid - 1
- return mid
+ return start-1
  
  Another equivalent form:
  while start + 1 < end:
