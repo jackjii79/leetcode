@@ -40,6 +40,16 @@ while number > 0:
  mid = int((start+end)/2)
  if we update left/right boundary, like start = mid + 1 or end = mid - 1 then the while condition is while start <= end;
  if we update left/right boundary, like start = mid+1 or end = mid then the while condition is while start < end.
+ what we want to find is the biggest element that smaller than target, return start-1 
+ 
+ Another equivalent form:
+ while start + 1 < end:
+  mid = start + (end-start)/2
+  if mid > target:
+   end = mid
+  else:
+   start = mid
+ return start
 
 
 
