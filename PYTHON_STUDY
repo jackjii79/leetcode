@@ -43,7 +43,7 @@ while number > 0:
  what we want to find is the biggest element that smaller than target, return start-1 
  
  ex:
- To find the biggest element that less than target:
+ To find the biggest element that less than target: 
  while start < end:
   mid = int((start+end)/2)
   if mid < target:
@@ -51,6 +51,9 @@ while number > 0:
   else:
    end = mid
  return start - 1
+ special note: returning start -1 means we cannot reach the end point and this means the end point is a maximum point that is 
+ unreachable from start ! Therefore, we have to make our upperbound addition by 1 if our rightmost point is an reachable one !
+ if max is reachable from mid then we just need to let end = max+1 !!!
  
  Alternatively:
  while start <= end:
@@ -61,6 +64,7 @@ while number > 0:
    end = mid - 1
  return start-1
  
+ Same is here, end have to be an reachable point! end = max + 1
  Another equivalent form:
  while start + 1 < end:
   mid = start + (end-start)/2
