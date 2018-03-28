@@ -1,1 +1,185 @@
+1 Advanced Binary Search:
+The purpose of binary search is to divide possible solutions into half, the detailed procedure is as follow:
+1) estimate the range of results: what is the upperbound ? what is the lowerbound ?
+2) guess the possible solution within the estimated range: always get the middle of the range
+3) establish examination condition to check if guessed result is valid: according to the object of the question
+4) Adjust estimated range according to the results of examination condition test: either move forward or backward
 
+when should we use binary search ? we can estimate the range of solution and the question is to ask some optimal case(max/min) within
+the estimated range
+
+Several sample code of while loop in binary search:
+1) exit when both upperbound and lowerbound are the same, the upperbound is never reachable thus we need to make end+1 to make sure
+the biggest upperbound we can get is the reachable value !! The goal is the get the biggest one that is smaller than target
+while st < end:
+ mid = int((st + end) / 2)
+ if mid < target:
+  st = mid + 1
+ else:
+  end = mid
+return st - 1
+
+2) exit when both upperbound and lowerbound are the same, the upperbound is always reachable. The goal is to get the smallest one
+that is bigger than target
+while st < end:
+ mid = int((st + end) / 2)
+ if mid > target:
+  end = mid
+ else:
+  st = mid + 1
+return st
+
+3) exit when upperbound is less than lowerbound, the result has to be one single point within the range. This usually running
+slower than 1) and 2)
+while st <= end:
+ mid = int((st + end) / 2)
+ if mid > target:
+  end = mid - 1
+ elif mid < target:
+  st = mid + 1
+ else:
+  return mid
+  
+ 4) exit when there is just two points st and end, there have to be three points within the range at least, usually applicable to
+  non-integer operation
+  while st + 1 < end:
+   mid = (st + end) / 2
+   if mid < target:
+    st = mid
+   else:
+    end = mid
+  return st
+  
+  Application I: find the duplicated number between 1 and n, the length of input array is between 1 and n + 1
+  analysis: 1) Since the range of duplicated number is between 1 and n 2) the condition is that there is a duplicated one in the 
+  array. Thus we can use binary search to solve it
+  while loop strategy: the smallest one that is bigger than target
+  
+  Application II: Wood cut, given n picecs of length of wood, cut them into pieces with equal length from n picecs that have to
+  be bigger than or equal to k, find the longgest length of each k piece
+  analysis: 1) Since the range of the length of each piece is between 1 and max(picecs), let res be length of our result
+  2) the condition is sum([int(piece/res) for piece in pieces]) >= k. Thus we can use binary search to solve it
+  while loop strategy: the biggest one that is smaller than target(remember to let end + 1 !!)
+  
+  Application III: Copy Books, given n book pages and we have k person, each person can only consecutive books in the pages array
+  assuming 1 page takes 1 minute, find the minimal minute to finish reading all n pages by k person
+  analysis: 1) Since the range of minutes is between min(pages) and sum(pages), let res be minimal minutes takes to complete
+  2) let a[i] be each person's allocation minutes to finish reading allocated books, the condition is sum(a[i] where i in 1..k)
+  is equals to sum(pages) and res = max(a[i] where i in 1..k) to be minimize
+  while loop strategy: the smallest one that is bigger than target
+  
+  Application IV: Find peak element I, given n elements find the peak index such that p[i-1] < p[i] > p[i+1]
+  analysis: 1) the peak element index is within range from 0 to len(p)-1 2) the condition is that p[i-1] < p[i] > p[i+1]
+  while loop strategy: single point
+  
+  Application V: First Bad Version, given n element, once there is a code version bad, all following version will become bad
+  as well, our goal is to find the first one that is False
+  analysis: 1) the result index is between 1 and n 2) the condition is to find the first False
+  while loop stragegy: the smallest one that is bigger than target
+  
+  Application VI: Find peak element II, given a matrix that outermost rows/columns are always smaller than inner rows/columns
+  find the index of the peak element such that p[i-1][j] < p[i][j] & p[i+1][j] < p[i][j] & p[i][j-1] < p[i][j] & p[i][j+1] < p[i][j]
+  analysis: 1) the range of index is within matrix 2) the condition is as above
+  while loop strategy: we get the mid of rows to find the maximum columns,i+1/i-1 rows in the same column bigger than maximum 
+  columns will contains peak(up/down), thus we cut matrix into half according to rows vertically and we get the mid of columns 
+  to find the maximum row in vertical and j+1/j-1 columns in the same row bigger than maximum rows will contains peak(left/right),
+  thus we cut matrix into half according to column horizontally. Combing, we get a quarter of target area
+  the termination principle is single point
+  
+  Application VII: Divide two integers, given two integers, without multipli0 cation/divide/module to get result of division in
+  integer
+  analysis:1) the range of result is between 0 and dividend 2) the condition is res * divisor + remain == dividend where remain
+  is less than divisor
+  while loop strategy: we use bit operation to perform multiplication: a << c is equal to a * pow(2,c) and start from bit 31 to
+  bit 0
+  for i in range(end,-1,-1): #end is 31
+            if remain + (divisor << i) <= dividend:
+                remain += divisor << i
+                quotient += pow(2,i)
+                
+ Application VIII: sqrt(x) II, perform square root on double digits
+ analysis:1) the range of sqrt(x) is between 0 to x 2) let res be sqrt(x), res*res <= x
+ while loop strategy: the triple strategy 
+ while st < end - base:
+            mid = (st + end) / 2
+            if mid * mid >= x:
+                end = mid
+            else:
+                st = mid
+  return st
+  
+ Applicatio IX: sqrt(x), perform square root on integer digits
+ analysis: 1) the range of sqrt(x) is between 1 and x 2) let res be sqrt(x), res*res <= x
+ while loop strategy: the biggest one that is smaller than target
+ while st <= end:
+            mid = int((st+end)/2)
+            if mid * mid < x:
+                st = mid + 1
+            elif mid * mid > x:
+                end = mid - 1
+            else:
+                return mid
+        return st - 1
+        
+ Application X: Smallest Rectangle Enclosing Black Pixels, given a position i,j of a index which value is 1 in a binary matrix,
+ there is only one black region that connects with each block points vertically and horizontally, find the smallest rectangle
+ area that contains all black points
+ analysis: 1) we need to find the four extreme points of the rectangle, they all within binary matrix 2) the condition is that
+ we start stretching from given position in up/down/left/right four directions, in up/left direction we find the first "1" from
+ st(lower) to end(upper) direction, which applies the smallest one that is bigger than target while loop strategy; in down/right
+ direction we find the last "1" from st(lower) to end(upper) direction, which applies the biggest one that is smaller than target
+ (note let end + 1)
+ while low < high:
+            mid = int((low + high) / 2)
+            if ((is_vertical == True and "1" in image[mid][min:max]) or (is_horizontal == True and "1" in [image[x][mid] for x in range(min,max)])) and is_upleft == True:
+                high = mid 
+            elif ((is_vertical == True and "1" in image[mid][min:max]) or (is_horizontal == True and "1" in [image[x][mid] for x in range(min,max)])) and is_upleft == False:
+                low = mid + 1
+            elif ((is_vertical == True and "1" not in image[mid][min:max]) or (is_horizontal == True and "1" not in [image[x][mid] for x in range(min,max)])) and is_upleft == True:
+                low = mid + 1
+            elif ((is_vertical == True and "1" not in image[mid][min:max]) or (is_horizontal == True and "1" not in [image[x][mid] for x in range(min,max)])) and is_upleft == False:
+                high = mid
+        if is_upleft == True:
+            return low #this strategy we can get the end value
+        else:
+            return low - 1 #this strategy we cannot get the end value, thus we need to make high + 1
+stretch from four directions:
+max_row, max_col = len(image), len(image[0])
+            lowest_row = self.binary_stretch(image, 0, x, 0, max_col, True, False, True)
+            highest_row = self.binary_stretch(image, x+1, max_row, 0, max_col, True, False, False)
+            left_col = self.binary_stretch(image, 0, y, lowest_row, highest_row+1, False, True, True)
+            right_col = self.binary_stretch(image, y+1, max_col, lowest_row, highest_row+1, False, True, False)
+            return (highest_row - lowest_row + 1) * (right_col - left_col + 1)
+
+Application XI: Maximum Average Subarray II, given an array, find the subarray with the maximum average with length >= k
+analysis: 1) the maximum average is between min(array) and max(array) 2) the condition is that we have to check if the given
+array have such subarray whose average is >= estimated average
+while loop strategy: since we are allowed to have some degree of inaccuracy, we can use triple strategy on float
+The trick is to determine if given array has a subarray whose average is bigger than or equal to the estimated average
+Below is how we achieve this:
+for i in range(len(nums)):
+ nums[i] -= average #we minus average, so that we just need to find if there is subarray whose sum is bigger or equal to 0 !!
+sum_array, sum_part, min_before = 0, 0, 
+for i in range(k):
+ sum_array += nums[i]
+if sum_array >= 0:
+ return True
+#This is how we determine if there exsits a subarray with length >= k, its sum is bigger than or equal to zero !!! 
+for i in range(k,len(nums)):
+ sum_array += nums[i]
+ sum_part += nums[i-k]
+ min_before = min(min_before, sum_part)
+ if sum_array - min_before >= 0: #sum_array is the maximum sum value of subarray with length >= k
+  return True
+return False
+        
+ Then, we use triple strategy to get our result in while loop manner:
+ while st < end - base: #ase is 1e-8 which is the degree of precision
+  mid = (end + st) / 2
+  if self.check_ifbiggest(mid, nums, k) == False:
+   end = mid            
+  else:
+   st = mid
+ return st
+  
+  
