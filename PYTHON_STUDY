@@ -54,6 +54,7 @@ while number > 0:
  special note: returning start -1 means we cannot reach the end point and this means the end point is a maximum point that is 
  unreachable from start ! Therefore, we have to make our upperbound addition by 1 if our rightmost point is an reachable one !
  if max is reachable from mid then we just need to let end = max+1 !!!
+ the reason we return start-1 because we interested in the biggest one that less than target !!!
  
  Alternatively:
  while start <= end:
