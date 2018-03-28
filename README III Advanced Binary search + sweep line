@@ -183,3 +183,53 @@ return False
  return st
   
   
+2 sweep line:
+we just need to remember if we encounters [] range, we should consider using sweep line
+1) split starting and ending point into a whole new array
+2) sort the array (if the value ties occur, we sort according to their type in decreasing order, which means ending point comes
+before starting point([10,20],[20,30] we should sort like [10<starting>,20<ending>,20<starting>,30<ending>]
+
+Application Building outline: HashHeap + sweep line
+when we encounters a starting x-pxis, we push into hashheap, when we encounters a ending x-pxis, we delete from hashheap
+
+there are two types of things we need to take care while moving our sweep line:
+1 when encounters a start bracket bar(left side of bar,"enter" the bar)
+when we encounters a new starting bracket, we compare the height with our current highest bar in the hashheap, 
+if the new one is higher and also this is not a vertical line which means the left x axis of our previous highest bar is not 
+equal to current new starting bracket's left x axis then we append this into our result . The reason is because there could be 
+a higher bar on the same vertical line
+
+2 when encounters a end bracket bar(right side of bar,"leave" the bar)
+we first save the previous highest bar and then delete new bar height from our hashheap, then if heap is empty, we add this into 
+our result; if heap is not empty and we compare the deleted height with the new highest bar in our new heap after deleting this 
+one, if new height is less than deleted height, then we add this into our result !
+
+Sample code:
+max_heap, sweep_line_table, result_list, index = hashheap(), [], [], 0
+        for boundary in buildings:
+            sweep_line_table.append([boundary[0],boundary[2],1])
+            sweep_line_table.append([boundary[1],boundary[2],2])
+        sweep_line_table.sort(key=lambda x:(x[0],x[2],x[1]))
+        while index < len(sweep_line_table):
+            if sweep_line_table[index][2] == 1:
+                if max_heap.get_size() > 0: 
+                    top_ele = max_heap.get_peek()
+                    if top_ele[0] < sweep_line_table[index][1]:
+                        x_row = sweep_line_table[index][0]
+                        #consider the case when x_row is equal to top_ele then we do nothing because there could be a higher bar on this vertical and this does not form a outline 
+                        if x_row != top_ele[1]:
+                            result_list.append([top_ele[1],x_row,top_ele[0]])
+                max_heap.push([sweep_line_table[index][1],sweep_line_table[index][0]])
+            elif sweep_line_table[index][2] == 2:
+                last_top = max_heap.get_peek()
+                max_heap.delete(sweep_line_table[index][1])
+                if max_heap.get_size() > 0:
+                    top_ele = max_heap.get_peek()
+                    if sweep_line_table[index][1] > top_ele[0]:
+                        result_list.append([last_top[1],sweep_line_table[index][0],last_top[0]])
+                        max_heap.update_x_val(sweep_line_table[index][0])
+                else:
+                    result_list.append([last_top[1],sweep_line_table[index][0],last_top[0]])
+            index += 1
+        return result_list
+  
