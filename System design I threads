@@ -1,0 +1,48 @@
+Time slicing ensures that all software threads make some progress. Otherwise, some software threads might hog all the 
+hardware threads and starve other software threads. 
+However, fair distribution of hardware threads incurs overhead. There are several kinds of overhead
+
+1 Register state 
+The most obvious overhead is saving register state of a thread when suspending it, and restoring the state when resuming it. 
+You might be surprised how much state there is on modern processors. However, schedulers typically allocate big enough time slices 
+so that the save/restore overheads are insignificant, so this obvious overhead is in fact not much of a concern 
+
+2 Cache State 
+A more subtle but significant overhead of time slicing is saving and restoring a thread's cache state, which can be megabytes. 
+Modern processors rely heavily on cache memory, which can be about 10 to 100 times faster than main memory. Accesses that hit in 
+cache are not only much faster; they also consume no bandwidth from the memory bus. Caches are fast, but finite. When the cache is 
+full, a processor must evict data from the cache to make room for new data. Typically, the choice for eviction is the 
+least recently used data(LRU), which is typically data from an earlier time slice. 
+Thus software threads tend to evict each other's data, and the cache fighting from too many threads can hurt performance.
+
+3 Virtual Memory 
+A similar overhead, at a different level, is thrashing virtual memory. Most computers use virtual memory. Virtual memory resides 
+on disk, and the frequently used portions are kept in real memory. Similar to caches, the least recently used data is evicted from 
+memory to disk when necessary to make room. Each software thread requires virtual memory for its stack and private data structures. 
+As with caches, time slicing causes threads to fight each other for real memory and thus hurts performance. 
+In extreme cases, there can be so many threads that the program runs out of even virtual memory.
+
+4 Lock 
+Another problem arises when a time slice expires for a thread holding a lock. All threads waiting for the lock must now wait for 
+the holding thread to get another time slice and release the lock. The problem is even worse if the lock implementation is fair, 
+in which the lock is acquired in first-come first-served order. If a waiting thread is suspended, then all threads waiting behind 
+it are blocked from acquiring the lock. It's like having someone fall asleep in a check-out line. 
+The more software threads there are without hardware threads to run them, the more likely this will become a problem.
+
+How to solve the overhead of running too many threads ?
+1 number of threads
+A good solution is to limit the number of runnable threads to the number of hardware threads, and possibly limit it to the number 
+of outer-level caches if cache contention is a problem. Because target platforms vary in the number of hardware threads, 
+avoid hard-coding your program to a fixed number of threads. Let your program's degree of threading adapt to the hardware.
+
+2 block threads
+Runnable threads, not blocked threads, cause time-slicing overhead. When a thread blocks on an external event, such as a mouse 
+click or disk I/O request, the operating system takes it off the round-robin schedule, so the thread no longer incurs 
+time-slicing overhead. A program may have many more software threads than hardware threads, and still run efficiently 
+if most of those software threads are blocked.
+
+3 seperate software threads from I/O threads
+A helpful organizing principle is to separate compute threads from I/O threads. Compute threads should be the threads that are 
+runnable most of the time, and ideally never block on external events. The number of compute threads should match the processor 
+resources. 
+The I/O threads are threads that wait on external events most of the time, and thus do not contribute to having too many threads.
