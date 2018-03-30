@@ -1,0 +1,29 @@
+Important elements of DP:
+Substructure optimal:
+1) determine the number of subproblems
+how many space do we need to store dp solution of subproblems
+
+2) determine how many choices do we have to make in subproblems in order to get optimal result
+what is the relation function between subproblem and optimal result
+
+3) check if each subproblem is independent of each other
+if not like longgest path, then we cannot use DP
+
+4) Prove if substructure optimal is correct (prove contradiction)
+make sure this is a substrcture optimal 
+
+Overlap subproblems:
+1) If the subproblem is overlap in the recursive tree, if so then we can use DP to solve repeated problems
+(divide and conquer do not have repeated sub problems in recursive tree)
+we can either use memorization in top-down or bottom-up
+
+Improvement:
+If we use top-down, we should seek opportunity to optimize the storage space we use to store DP result
+ex:
+if dp[i,j] = dp[i-1,j-1]+1, if a[i] == b[j];
+   dp[i,j] = max(dp[i-1,j],dp[i,j-1]), if a[i] != b[j]
+   for i,j in 1..m, 1..n
+  Here, all we need is result from last row, thus we can reduce from dp[m][n] to dp[2][n]
+  
+Initialization:
+like dp[i]= sth with dp[i-1] we probably should start from 0 and let dp[0] be 0, depending on the form of dp relation function
