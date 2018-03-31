@@ -36,3 +36,5 @@ dp[n] = sth with dp[n-1]
 
 2) problem involving length of intervals
 dp[0,n] = sth with dp[1,n] or dp[0,n-1]
+alternatively,
+dp[j] = sth with dp[i] where 0 <= i < j
