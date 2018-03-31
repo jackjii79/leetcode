@@ -27,3 +27,12 @@ if dp[i,j] = dp[i-1,j-1]+1, if a[i] == b[j];
   
 Initialization:
 like dp[i]= sth with dp[i-1] we probably should start from 0 and let dp[0] be 0, depending on the form of dp relation function
+
+Note:Always start thinking about backtracking in top-down fashion and use memorization to reduce running time complexity
+
+Types of DP problem:
+1) problem from small to big sequentially
+dp[n] = sth with dp[n-1]
+
+2) problem involving length of intervals
+dp[0,n] = sth with dp[1,n] or dp[0,n-1]
