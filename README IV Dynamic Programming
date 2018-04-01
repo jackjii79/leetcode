@@ -38,3 +38,12 @@ dp[n] = sth with dp[n-1]
 dp[0,n] = sth with dp[1,n] or dp[0,n-1]
 alternatively,
 dp[j] = sth with dp[i] where 0 <= i < j
+
+3) continuous DP problem:
+ex: maximum sum of continuous subarray/longest increasing/decreasing continuous subarray/maximal square/maximum rectange
+Such problems have a common feature that all adjacent cells have to be in a row into the solution, which means we cannot
+consider the case that dp[i] = dp[i-1] that do not make a choice because such arrangement will make next choice become 
+non-continuous ! Thus, eachtime our subproblem solution have to be the one that including current cell !
+Which means the last subproblem is not necessarily be our final solution(max/min), we have to use an auxiliary variable to
+store our best result whenever we come up with a solution of each subproblem and the result of our auxiliary variable will be
+our final result ! like, result = max(result, dp[i]) each time we got dp[i]
