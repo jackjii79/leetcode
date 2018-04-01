@@ -38,6 +38,11 @@ dp[n] = sth with dp[n-1]
 dp[0,n] = sth with dp[1,n] or dp[0,n-1]
 alternatively,
 dp[j] = sth with dp[i] where 0 <= i < j
+Our final result will resides in dp[0][n]
+
+Specialy Attention: Such intervals type of DP problem, if we use bottom-up strategy then we cannot optimize space storage by using
+2 lines even if we have the form dp[i][j] = sth with dp[i+1][j] and dp[i][j-1] since our line i is in a inner loop instead of a
+outermost loop. Which means if line ith is in a outermost loop then we can use dp[i%2] to reduce space by using 2 lines !!!
 
 3) continuous DP problem:
 ex: maximum sum of continuous subarray/longest increasing/decreasing continuous subarray/maximal square/maximum rectange
