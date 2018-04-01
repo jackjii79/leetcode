@@ -45,7 +45,9 @@ Specialy Attention: Such intervals type of DP problem, if we use bottom-up strat
 outermost loop. Which means if line ith is in a outermost loop then we can use dp[i%2] to reduce space by using 2 lines !!!
 
 3) continuous DP problem:
-ex: maximum sum of continuous subarray/longest increasing/decreasing continuous subarray/maximal square/maximum rectange
+Related problems: maximum product of continuous subarray/maximum sum of continuous subarray/longest increasing/decreasing 
+continuous subarray/maximal square/maximum rectange
+
 Such problems have a common feature that all adjacent cells have to be in a row into the solution, which means we cannot
 consider the case that dp[i] = dp[i-1] that do not make a choice because such arrangement will make next choice become 
 non-continuous ! Thus, eachtime our subproblem solution have to be the one that including current cell !
