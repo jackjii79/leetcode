@@ -25,6 +25,9 @@ if dp[i,j] = dp[i-1,j-1]+1, if a[i] == b[j];
    for i,j in 1..m, 1..n
   Here, all we need is result from last row, thus we can reduce from dp[m][n] to dp[2][n]
   
+ normally, only outermost rows can be space optimized using % to cut from n to a constant number of rows depending on relation
+ formula !!!(dp[i] = sth with dp[i-1] means result only rely on last row, thus we only need 2 rows !)
+  
 Initialization:
 like dp[i]= sth with dp[i-1] we probably should start from 0 and let dp[0] be 0, depending on the form of dp relation function
 
