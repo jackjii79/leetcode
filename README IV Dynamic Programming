@@ -27,6 +27,8 @@ if dp[i,j] = dp[i-1,j-1]+1, if a[i] == b[j];
   
  normally, only outermost rows can be space optimized using % to cut from n to a constant number of rows depending on relation
  formula !!!(dp[i] = sth with dp[i-1] means result only rely on last row, thus we only need 2 rows !)
+ Only the outermost row of loop can be used to space optimization !!(for i in... for j in .. where i is the outermost which has
+ the potential to space optimization)
   
 Initialization:
 like dp[i]= sth with dp[i-1] we probably should start from 0 and let dp[0] be 0, depending on the form of dp relation function
@@ -57,3 +59,36 @@ non-continuous ! Thus, eachtime our subproblem solution have to be the one that 
 Which means the last subproblem is not necessarily be our final solution(max/min), we have to use an auxiliary variable to
 store our best result whenever we come up with a solution of each subproblem and the result of our auxiliary variable will be
 our final result ! like, result = max(result, dp[i]) each time we got dp[i]
+
+To maximal square problem in matrix, we can construct a up and left array to count the number of 1s or 0s on up and left directions
+respectively, and let the matrix of up/left directions matrix help us to decide whether there is a square from the right down
+point as our starting point
+
+To longest increasing/decreasing problem, even though the result has not to be a continuous subarray, this is still a continus
+DP problem because we let current element in the array comparing with all previous elements, this type of problem we described
+as "looking back DP problem" and still the last dp result is not necessarily the optimal result; However, on the country, to 
+continuous increasing/decreasing problem, we do not need to look back since requirements have to be continuous,all we need to
+do is to compare with the previous one 
+dp[i] = max(dp[i-1]+1,dp[i]) if input[i] > or < input[i-1]
+
+4) counterpart DP problem(博弈DP):
+drop a coin I/II/III: we consider the state of first player and we start to build DP from the last state to the initial state
+to come up the result whether or not we can win(从结果到起始状态倒退)
+ex: a player can either choose one or two coins from left to right, we start from the last state there the last one/two/three/.. 
+coin, dp[1] = coin[-1]; dp[2] = coin[-1] + coin[-2]; dp[3] = max(sum(coin[-3:])-dp[3-2],sum(coin[-3:])-dp[3-1]) which means
+when there are three coins left, after we pick up there are either one coin left or two coins left case, we find the maximum
+value we can get among those two cases !
+Another example is two players can either pick up one/two coins from leftmost or rightmost, then we have four cases :
+dp[i][j] is defined as the maximum amount of values we can get from i to j coins:
+dp[i][j] = max(sum(coin[i:j+1])-dp[i+1][j](we pick the leftmost one coin),sum(coin[i:j+1])-dp[i][j-1](we pick the rightmost one
+coin),sum(coin[i:j+1])-dp[i+2][j](we pick the leftmost two coins),sum(coin[i:j+1])-dp[i][j-2](we pick the rightmost two coin)
+
+Notice: If we have to judge which one player can win, we just let our result compare with half of the sum
+
+5) Comparative DP problem(匹配/比较DP）：
+finding the longest common subsequence/longest repeating subsequence/edit distance
+we let dp[i][j] defined as the first string with length i and the second string with length j that we have compared 
+The most important thing of such comparative DP problem is we have two strings to compare with,both starting from 0 position and
+end with m and n respectively which is their origin length . 
+
+
