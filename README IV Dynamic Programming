@@ -91,4 +91,36 @@ we let dp[i][j] defined as the first string with length i and the second string 
 The most important thing of such comparative DP problem is we have two strings to compare with,both starting from 0 position and
 end with m and n respectively which is their origin length . 
 
-
+6) Backpack DP problem(背包问题):
+we can use a value/target as a column/row dimension into our DP solution space
+0-1 backpack problem: we can only choose one item each time which means we can never look back
+for i in range(len(nums)):
+ for k in range(target,0,-1): #we start from the biggest target,which will let each element in the nums list only be chosen once
+  dp[i][k] = max(dp[i-1][k],dp[i-1][k-nums[i]] + nums[i]) or
+  dp[k] += dp[k-nums[i]]
+  
+complete-backpack problem: we can choose one item multiple times 
+for i in range(len(nums)):
+ for k in range(target+1): #we start from the smallest target,which will let each element chosen multiple times
+  dp[k] += dp[k-nums[i]]
+  
+ number of combinations with target sum and each item can be chosen multiple times:
+ ex:2 1 4 7 target is 7, if first element of combination seq is 7, then we found dp[0] in the rest, if first element of 
+ combination seq is 1,then we found dp[6], if first element of seq is 2, then we found dp[5],etc
+ dp[x] = sum(dp[x-nums[i]] where nums[i] <= x)
+ for t in range(target+1):
+  for x in range(len(nums)):
+   dp[t] += dp[t-nums[x]]
+   
+ 0-1 backpack problem:k sum
+ for i in range(len(nums)):
+  for j in range(target,0,-1):
+   for x in range(k+1):
+    dp[j][x] += dp[j-nums[i]][x-1]
+    
+ minimal adjustment cost: we let value be column dimension in DP solution space
+ dp_solution[i][v] the minimal cost that we set ith element be value v
+ dp_solution[i][v] = min(dp_solution[i-1][v'] + abs(nums[i]-v)) where abs(v'-v) <= target, v and v' can be any integer
+ from 1 to 100
+ our result is the minimal cost for dp_solution[N][v] where v is from 1 to 100 because our result is depends on the v' obtained
+ from (i-1)th element, which means we need to permutate all possible values of v from 1 to 100 to find the minimal one as v
