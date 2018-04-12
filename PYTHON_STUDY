@@ -75,5 +75,7 @@ while number > 0:
    start = mid
  return start
 
+Attention: when construct an array, we rather use array[i] = xxx than array.append(xxx) because append operation will cost more
+than directly assignment !!!
 
 
