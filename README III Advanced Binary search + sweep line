@@ -23,10 +23,10 @@ return st - 1
 that is bigger than target
 while st < end:
  mid = int((st + end) / 2)
- if mid > target:
-  end = mid
- else:
+ if mid <= target:
   st = mid + 1
+ else:
+  end = mid 
 return st
 
 3) exit when upperbound is less than lowerbound, the result has to be one single point within the range. This usually running
