@@ -111,4 +111,32 @@ def test():
             if answer == "AssertionError":
                 print "Nice job! Test case {0} correctly raises AssertionError!\n".format(args)
             else:
-                print "Check your work! Test case {0} should not raise AssertionError!\n".format(args)     
+                print "Check your work! Test case {0} should not raise AssertionError!\n".format(args)   
+                
+ Performance comparision with list(), set() and dict():
+ 1 Where an element is in a list definitely impacts how long it takes to discover that the element exists in the list!
+Elements near the beginning of a list are found very quickly. Elements near the end of the list take longer. 
+
+ 2 When checking for membership of an element in a list, itt takes longer to figure out an element doesn't exist in 
+ that list when the list is big.
+ 
+ The time it takes to test for membership in a list "scales linearly" with the size of the list. 
+ That just means if you double the size of the list you double the amount of time it takes to test for membership of an 
+ element (on average).
+ 
+ On the other sides, As you can see, the performance of sets and dictionaries does not depend on the size of the 
+ set / dictionary and membership tests are consistently fast. Fast is good.
+ 
+ Introduction to name tuple:
+ # named tuple's need to be imported from the collections library
+from collections import namedtuple
+
+# here we define Point as a new type of thing. 
+# It has properties x and y.
+Point = namedtuple("Point", ["x", "y"])
+
+# here we actually instantiate a point
+p1 = Point(5, -3)
+
+print(p1)
+ print(p1.x,p1.y) or print(p1[0],p1[1])
