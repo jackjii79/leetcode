@@ -131,11 +131,17 @@ The common feature of this type of problem is that the solution at m round is de
 in maximum product subarray problem, given array 3 5 7 we have the maximum product be 3*5*7 and 3 5 7 -3 we have the maximum 
 product be 3*5*7, however given 3 5 7 -3 -2 we have 3*5*7*-3*-2 which is different from last round result. similar to paint
 house problem.
+
 Therefore, to solve such problem, we simply permutate all possible choices and store in array to memorize those results
 in maximum product problem, we have max_product array and min_product array to store the maximum product subarray and the minimum
 product subarray, respectively. Our formula would be max_product[i] = max(num*max_product[i-1],num,num*min_product[i-1]) and
 min_product[i] = min(num*min_product[i-1],num,num*max_product[i-1])
+
 Similarly, to paint house problem, we store all three possible choices as:
 dp_solution[m][0](when we choose o color) += min(dp_solution[m-1][1],dp_solution[m-1][2]); dp_solution[m][1] += min(dp_solution
 [m-1][0],dp_solution[m-1][2]); dp_solution[m][2] += min(dp_solution[m-1][0],dp_solution[m-1][1])
+
+to paint house ii problem, we do not have to the minimum for each k choices, instead we just need to find the minimum choice
+and the secondary minimum choice over all k choices since as long as the minimum/secondary choice of last round is not equal
+to our current k choice, which would be ok !!!
 
