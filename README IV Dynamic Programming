@@ -145,3 +145,8 @@ to paint house ii problem, we do not have to the minimum for each k choices, ins
 and the secondary minimum choice over all k choices since as long as the minimum/secondary choice of last round is not equal
 to our current k choice, which would be ok !!!
 
+Optimization tips:
+1) think about forward algo and backward algo combined together may optimize running time !
+2) think about prefix sum may be used to reduce running time
+3) think about maybe we do not need to find the max/min for every sets that contain lots of members in common, instead we just need
+to find the best one and the secondary best one ?
