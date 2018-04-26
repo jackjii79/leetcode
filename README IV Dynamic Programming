@@ -150,3 +150,22 @@ Optimization tips:
 2) think about prefix sum may be used to reduce running time
 3) think about maybe we do not need to find the max/min for every sets that contain lots of members in common, instead we just need
 to find the best one and the secondary best one ?
+
+Maximum subarray III:
+二、划分型动规解法
+
+对方法一进行思考，其实仍然可以进行优化。对于 f[i][j] = max{f[m][j - 1] + maxSubArray(m + 1, i)}, j - 1 <= m < i ，每当新增一个元素的时候，之前的最大值仍是最大值，但是需要和新加进来的元素进行对比，所以只需要把之前遍历得到的结果用一个变量存储起来，就无需反复遍历了。
+
+    定义状态：
+        定义 localMax[i][j]，表示前 i 个数字，取 j 个划分时，包含第 i 个数字的最大和。
+        定义 globalMax[i][j]，表示前 i 个数字，取 j 个划分时，可以不包含第 i 个数字的最大和。
+    定义状态转移函数：
+        对 localMax[i][j]，由于一定包含第 i 个数字，那么有两种情况，
+            第 i 个数字属于第 j 个子数组，对应 localMax[i - 1][j] + nums[i - 1]；
+            第 i 个数字不属于第 j 个子数组，对应 localMax[i - 1][j - 1] + nums[i - 1]；
+            比较两者取最大值皆可。
+        对 globalMax[i][j]，比较 localMax[i][j] 和 globalMax[i - 1][j] 中的最大值即可。
+    定义起点：
+        对 localMax[i][j]，在处理时会出现 localMax[i - 1][i]，根据逻辑此种情况不存在，由于涉及取最大值操作，所以初始化为 Integer.MIN_VALUE。
+    定义终点：最终结果即为 globalMax[n][k]。
+
