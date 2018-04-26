@@ -1,0 +1,16 @@
+Matrix power (pow(A,n) where A is a matrix)application problem
+1 get ith fibonacci value in O(lgn) time
+sample code:
+Matrix power(int n) {
+        Matrix ret = new Matrix(row, col, 1);
+        Matrix matrix = new Matrix(this);
+        while (n > 0) {
+            if (n % 2 == 1) {
+                ret = ret.multiply(matrix);
+            }
+            n = n / 2;
+            matrix = matrix.multiply(matrix);
+        }
+        return ret;
+    }
+    
