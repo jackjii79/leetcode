@@ -126,7 +126,7 @@ for i in range(len(nums)):
  from (i-1)th element, which means we need to permutate all possible values of v from 1 to 100 to find the minimal one as v
 
 Dependent DP problem: current round solution depends on last round choice
-similar problems: paint house/maximum product subarray
+similar problems: paint house/maximum product subarray/minimum adjustment cost
 The common feature of this type of problem is that the solution at m round is depdends on our choice at m-1 round
 in maximum product subarray problem, given array 3 5 7 we have the maximum product be 3*5*7 and 3 5 7 -3 we have the maximum 
 product be 3*5*7, however given 3 5 7 -3 -2 we have 3*5*7*-3*-2 which is different from last round result. similar to paint
