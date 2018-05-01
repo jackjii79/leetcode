@@ -133,6 +133,9 @@ for i in range(len(nums)):
                 if j >= coins[i]:
                     dp_solution[j] += dp_solution[j-coins[i]]
         return dp_solution[amount]
+        
+Note: above methods are based on the assumption that all elements in the input array are unique, which means if there exists
+duplicated elements, then we need to rule out all duplicated combinations first then only consider all unique cases !!! 
    
  0-1 backpack problem:k sum
  for i in range(len(nums)):
