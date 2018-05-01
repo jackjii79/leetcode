@@ -104,6 +104,16 @@ for i in range(len(nums)):
  for k in range(target+1): #we start from the smallest target,which will let each element chosen multiple times
   dp[k] += dp[k-nums[i]]
   
+ there are two types of combinations problem:
+ 1 sequence does matter
+ ex:backpack VI, given [1,2,4] and target sum is 4
+ The possible combination ways are:
+[1, 1, 1, 1]
+[1, 1, 2]
+[1, 2, 1]
+[2, 1, 1]
+[2, 2]
+[4]
  number of combinations with target sum and each item can be chosen multiple times:
  ex:2 1 4 7 target is 7, if first element of combination seq is 7, then we found dp[0] in the rest, if first element of 
  combination seq is 1,then we found dp[6], if first element of seq is 2, then we found dp[5],etc
@@ -111,6 +121,18 @@ for i in range(len(nums)):
  for t in range(target+1):
   for x in range(len(nums)):
    dp[t] += dp[t-nums[x]]
+   
+ 2 sequence not matter:
+ ex:coin charge 2: given [2,3,5] find number of combinations that sum is 8, then we have[8],[2,2,2,2],[2,3,3] three
+ def change(self, amount, coins):
+        # write your code here
+        dp_solution = [0 for i in range(amount+1)]
+        dp_solution[0] = 1
+        for i in range(len(coins)):
+            for j in range(amount+1):
+                if j >= coins[i]:
+                    dp_solution[j] += dp_solution[j-coins[i]]
+        return dp_solution[amount]
    
  0-1 backpack problem:k sum
  for i in range(len(nums)):
