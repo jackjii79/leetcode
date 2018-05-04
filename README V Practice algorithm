@@ -14,3 +14,25 @@ Matrix power(int n) {
         return ret;
     }
     
+    
+Partition & quick select sample code:
+def partition(self, array, st, end):
+        i, j, key = st, st+1, array[st]
+        for j in range(st+1,end+1):
+            if key > array[j]:
+                i += 1
+                array[i], array[j] = array[j], array[i]
+        array[i], array[st] = array[st], array[i]
+        return i
+        
+    def quick_select(self, array, st, end, k):
+        if end >= st:
+            pivot = self.partition(array, st, end)
+            if pivot == k:
+                return
+            elif pivot > k:
+                return self.quick_select(array, st, pivot-1, k)
+            else:
+                return self.quick_select(array, pivot+1, end, k)
+        else:
+            return
