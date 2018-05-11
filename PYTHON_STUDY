@@ -140,3 +140,8 @@ p1 = Point(5, -3)
 
 print(p1)
  print(p1.x,p1.y) or print(p1[0],p1[1])
+ 
+Unpack arguments as input:
+x(a,b,c)
+we can define X as following:
+def X(*inputs): #where '*input' means number of arguments can be arbitary number !
