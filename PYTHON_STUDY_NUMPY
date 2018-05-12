@@ -1,0 +1,8 @@
+1 the meaning of axis in numpy array:
+>>> a=np.array([[1,2,3],[10,9,11]])
+>>> np.sum(a,axis=0)
+array([11, 11, 14])
+>>> np.sum(a,axis=1)
+array([ 6, 30])
+as above shows, when axis=0, our object is each column;
+when axis=1, our object is each row
