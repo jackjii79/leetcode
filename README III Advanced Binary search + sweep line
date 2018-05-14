@@ -233,3 +233,19 @@ max_heap, sweep_line_table, result_list, index = hashheap(), [], [], 0
             index += 1
         return result_list
   
+Standard sample code to find the last position of target in sorted array by using binary search:
+if len(nums) == 0:
+            return -1
+        st, end = 0, len(nums)-1
+        while st < end:
+            middle = int((st + end) / 2)
+            if nums[middle] > target:
+                end = middle
+            else:
+                st = middle + 1
+        if nums[st] == target and st + 1 == len(nums):
+            return st
+        if st > 0 and nums[st-1] == target and st + 1 < len(nums) and nums[st + 1] > target:
+            return st - 1
+        if (st == 0 and nums[st] != target) or (st > 0 and nums[st-1] != target):
+            return -1
