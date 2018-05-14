@@ -1,3 +1,25 @@
-1 suffix array:
+1 
+suffix array:
 the prefix of suffix array is the substring of the whole string
 "banana" suffix array is ["banana","anana","nana","ana","na","a"]
+
+2
+rabin karp algo for substring match:
+len_source, len_target = len(source), len(target)
+        modulo = random.randint(1000000, 2000000)
+        hash_source, hash_target, base = 0, 0, 26
+        for idx in range(len_target):
+            hash_target = ((ord(target[idx])-ord('a')) + base * hash_target) % modulo
+            if hash_target < 0:
+                hash_target += modulo
+        max_base = 1
+        for idx in range(len_target-1):
+            max_base = (max_base * base) % modulo
+        for idx in range(len_source):
+            if idx >= len_target:
+                hash_source = (hash_source - (ord(source[idx-len_target])-ord('a')) * max_base) % modulo
+            hash_source = (ord(source[idx])-ord('a') + hash_source * base) % modulo
+            if hash_source < 0:
+                hash_source += modulo
+            if idx >= len_target-1 and hash_source == hash_target:
+                return idx-len_target+1
