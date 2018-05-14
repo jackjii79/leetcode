@@ -23,3 +23,13 @@ len_source, len_target = len(source), len(target)
                 hash_source += modulo
             if idx >= len_target-1 and hash_source == hash_target:
                 return idx-len_target+1
+                
+3 DFS for subsets II to deal with the duplicated cases:
+def dfs_search(self, nums, st_idx, subsets, results):
+        results.append(subsets[:])
+        for idx in range(st_idx, len(nums)):
+            if idx-1 >= 0 and nums[idx] == nums[idx-1] and idx > st_idx:#think about the situation [1,2',2''] 
+            #when we have [2'] and [2''], how to avoid this ?
+                continue
+            self.dfs_search(nums, idx + 1, subsets+[nums[idx]], results) #make sure subsets+[nums[idx]] can 回溯 !
+        return
