@@ -34,24 +34,4 @@ def dfs_search(self, nums, st_idx, subsets, results):
             self.dfs_search(nums, idx + 1, subsets+[nums[idx]], results) #make sure subsets+[nums[idx]] can 回溯 !
         return
         
-4 search target in roated sorted array sample code:
-while st <= end:
-            middle = int((st + end) / 2)
-            if A[middle] == target:
-                return middle
-            else:
-                if A[middle] > A[end]: #case when more than half on the left is bigger increasing subarray
-                    if A[middle] < target:
-                        st = middle + 1
-                    elif A[middle] > target and target > A[end]:
-                        end = middle - 1
-                    elif A[middle] > target and target <= A[end]:
-                        st = middle + 1
-                else: #case when more than half on the right is smaller increasing subarray
-                    if A[middle] > target:
-                        end = middle - 1
-                    elif A[middle] < target and target <= A[end]:
-                        st = middle + 1
-                    elif A[middle] < target and target > A[end]:
-                        end = middle - 1
-        return -1
+
