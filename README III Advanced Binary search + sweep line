@@ -249,3 +249,51 @@ if len(nums) == 0:
             return st - 1
         if (st == 0 and nums[st] != target) or (st > 0 and nums[st-1] != target):
             return -1
+            
+Standard sample code to find higher index and lower index of target in sorted array:
+st, end, low_idx = 0, len(A)-1, 0
+        while st < end:
+            middle = int((st + end) / 2)
+            if A[middle] < target:
+                st = middle + 1
+            else:
+                end = middle
+        if A[st] == target:
+            low_idx = st
+        else:
+            return 0 #does not exist at all
+        #find the higher index of target:
+        st, end, high_idx = 0, len(A)-1, 0
+        while st < end:
+            middle = int((st + end) / 2)
+            if A[middle] <= target:
+                st = middle + 1
+            else:
+                end = middle
+        if A[st] == target:
+            high_idx = st
+        else:
+            high_idx = st - 1
+        return high_idx - low_idx + 1
+        
+Standard sample code to find target in rotated sorted array:
+while st <= end:
+            middle = int((st + end) / 2)
+            if A[middle] == target:
+                return middle
+            else:
+                if A[middle] > A[end]: #case when more than half on the left is bigger increasing subarray
+                    if A[middle] < target:
+                        st = middle + 1
+                    elif A[middle] > target and target > A[end]:
+                        end = middle - 1
+                    elif A[middle] > target and target <= A[end]:
+                        st = middle + 1
+                else: #case when more than half on the right is smaller increasing subarray
+                    if A[middle] > target:
+                        end = middle - 1
+                    elif A[middle] < target and target <= A[end]:
+                        st = middle + 1
+                    elif A[middle] < target and target > A[end]:
+                        end = middle - 1
+        return -1
