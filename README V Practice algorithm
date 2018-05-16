@@ -36,3 +36,15 @@ def partition(self, array, st, end):
                 return self.quick_select(array, pivot+1, end, k)
         else:
             return
+
+prime factorization:
+result, i = [], 2
+        while i * i <= num:
+            while not num % i:
+                num = int(num/i)
+                result.append(i)
+            i += 1
+            
+        if num != 1:
+            result.append(num)
+        return result
