@@ -1,5 +1,5 @@
 Matrix power (pow(A,n) where A is a matrix)application problem
-1 get ith fibonacci value in O(lgn) time
+1 get ith fibonacci value in O(lgn) time, the idea can be extend to problem fast power !
 sample code:
 Matrix power(int n) {
         Matrix ret = new Matrix(row, col, 1);
