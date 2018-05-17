@@ -297,3 +297,8 @@ while st <= end:
                     elif A[middle] < target and target > A[end]:
                         end = middle - 1
         return -1
+
+Attention about performance when perform "x" in array operation in binary search while loop:
+Normally, we prefer to use "x" in array than to use "x" not in array, because in operation returns much quickly than not in
+since not in have to scan the whole array !!!
+
