@@ -34,4 +34,17 @@ def dfs_search(self, nums, st_idx, subsets, results):
             self.dfs_search(nums, idx + 1, subsets+[nums[idx]], results) #make sure subsets+[nums[idx]] can 回溯 !
         return
         
+4 rotated sorted array minimum sample code:
+while st + 1 < end:
+            mid = int((st + end) / 2)
+            if nums[mid] == nums[end]: #we can remove end by not losing the minmum element !
+                end -= 1
+            elif nums[mid] > nums[end]:
+                st = mid
+            else:
+                end = mid
+        if nums[st] <= nums[end]:
+            min_idx = st
+        else:
+            min_idx = end
 
