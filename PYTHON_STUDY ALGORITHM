@@ -39,14 +39,15 @@ while st + 1 < end:
             mid = int((st + end) / 2)
             if nums[mid] == nums[end]: #we can remove end by not losing the minmum element !
                 end -= 1
-            elif nums[mid] > nums[end]:
+            elif nums[mid] > nums[end]: #more than half is bigger subarray on the left
                 st = mid
-            else:
+            else: #more than half is smaller subarray on the right
                 end = mid
         if nums[st] <= nums[end]:
             min_idx = st
         else:
             min_idx = end
+            
   rotated sorted array target sample code:
   while st + 1 < end:
             middle = int((st + end) / 2)
