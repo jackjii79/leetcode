@@ -47,4 +47,22 @@ while st + 1 < end:
             min_idx = st
         else:
             min_idx = end
+  rotated sorted array target sample code:
+  while st + 1 < end:
+            middle = int((st + end) / 2)
+            if A[middle] == target:
+                return True
+            elif A[middle] > A[end]: #more than half is bigger subarray on the left
+                if A[middle] > target and A[st] <= target:
+                    end = middle
+                else:
+                    st = middle
+            elif A[middle] < A[end]: #more than half is smaller subarray on the right
+                if A[middle] < target and target <= A[end]:
+                    st = middle
+                else:
+                    end = middle
+            elif A[middle] == A[end]:
+                end -= 1
+        return A[st] == target or A[end] == target
 
