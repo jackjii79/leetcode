@@ -67,3 +67,31 @@ while st + 1 < end:
                 end -= 1
         return A[st] == target or A[end] == target
 
+5 Two pointers algorithm:
+1) how to remove duplicated elements in the solution set ?
+ex: our result is a list of list and do not allow duplicated list element exists in our solution nested list
+we should remove duplicated list as we progress the program instead of using set or check duplicated once we finished !!
+problem 4sum:
+numbers.sort()
+        result = []
+        for fir in range(len(numbers)-3):
+            if fir != 0 and numbers[fir] == numbers[fir-1]: #skip duplicated
+                continue
+            for sec in range(fir+1, len(numbers)-2):
+                if sec != fir+1 and numbers[sec] == numbers[sec-1]: #skip duplicated
+                    continue
+                third, fourth = sec+1, len(numbers)-1
+                while third < fourth:
+                    if numbers[fir]+numbers[sec]+numbers[third]+numbers[fourth] < target:
+                        third += 1
+                    elif numbers[fir]+numbers[sec]+numbers[third]+numbers[fourth] > target:
+                        fourth -= 1
+                    else:
+                        result.append((numbers[fir],numbers[sec],numbers[third],numbers[fourth]))
+                        while third+1 < fourth and numbers[third] == numbers[third+1]: #skip duplicated
+                            third += 1
+                        third += 1
+                        while fourth-1 > third and numbers[fourth] == numbers[fourth-1]: #skip duplicated
+                            fourth -= 1
+                        fourth -= 1
+        return result
