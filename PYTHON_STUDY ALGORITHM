@@ -95,3 +95,64 @@ numbers.sort()
                             fourth -= 1
                         fourth -= 1
         return result
+
+6 BFS:
+standard sample code 1: BFS do not need level traversal(general graph)
+queue, visited = [], set()
+queue.append(root)
+visited.add(root)
+while queue is not empty:
+  head = queue.pop(0)
+  for adj in head.connected:
+    if adj not in visited:
+      visited.add(adj)
+      queue.append(adj)
+      
+standard sample code 2: BFS requires level traversal(tree/certain type of uncircled graph)
+queue, visited = [], set()
+queue.append(root)
+visited.add(root)
+while queue is not empty:
+  size = queue.size()
+  for i in range(size): #here we expand current level in the queue
+    head = queue.pop(0)
+    for adj in head.connected:
+      if adj not in visited:
+        visited.add(adj)
+        queue.append(adj)
+        
+Bidirectional BFS:
+adapt to undirected graph/starting and ending nodes are given
+If using one BFS, we have N levels with x nodes per level, overall computation is x^N;
+If using Bidirectional BFS, we have overall computation be 2*x^(N/2).
+standard sample code:
+startqueue, endqueue, startvisit, endvisit = [start], [end], {start}, {end}
+step = 0
+while startqueue is not empty or endqueue is not empty:
+  if startqueue is not empty:
+    step += 1
+    size = startqueue.size()
+    for i in range(size):
+      head = startqueue.pop(0)
+      for adj in head.connected:
+        if adj in startvisit:
+          continue
+        elif adj in endvisit: #forward direction is intersect with backward direction
+          return step
+        elif adj not in startvisit:
+          startvisit.add(adj)
+          startqueue.append(adj)
+  if endqueue is not empty:
+    step += 1
+    size = endqueue.size()
+    for i in range(size):
+      head = endqueue.pop(0)
+      for adj in head.connected:
+        if adj in endvisit:
+          continue
+        elif adj in startvisit: #backward direction is intersect with forward direction
+          return step
+        elif adj not in endvisit:
+          endvisit.add(adj)
+          endqueue.append(adj)
+ return -1 #if not connected between start and end
