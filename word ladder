@@ -1,0 +1,29 @@
+def get_next_word(self, bfs_queue, head, dict, end, set_visit):
+        for i in range(len(head)):
+            temp = ""
+            for j in range(97, 97+26):
+                if j != ord(head[i]):
+                    temp = head[:i] + chr(j) + head[i+1:]
+                    if temp not in set_visit and (temp in dict or temp == end):
+                        bfs_queue.append(temp)
+                        set_visit.add(temp)
+        return 
+        
+    """
+    @param: start: a string
+    @param: end: a string
+    @param: dict: a set of string
+    @return: An integer
+    """
+    def ladderLength(self, start, end, dict):
+        # write your code here
+        set_visit, bfs_queue, result = set(), [start], 1
+        set_visit.add(start)
+        while len(bfs_queue) > 0:
+            size = len(bfs_queue)
+            for i in range(size):
+                head = bfs_queue.pop(0)
+                if head == end:
+                    return result
+                self.get_next_word(bfs_queue, head, dict, end, set_visit)
+            result += 1
