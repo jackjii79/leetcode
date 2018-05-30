@@ -1,0 +1,36 @@
+topological sorting
+def sequenceReconstruction(self, org, seqs):
+        # write your code here
+        bfs_queue, in_degree_table, adj_list, result = [], dict(), dict(), []
+                
+        for node in org:
+            if node not in in_degree_table.keys():
+                in_degree_table[node] = 0
+                
+        for seq in seqs:
+            for idx in range(len(seq)):
+                if seq[idx] not in in_degree_table.keys() or (idx + 1 < len(seq) and seq[idx+1] not in in_degree_table.keys()):
+                    return False
+                if seq[idx] not in adj_list.keys():
+                    adj_list[seq[idx]] = set()
+                if idx + 1 < len(seq) and seq[idx+1] not in adj_list[seq[idx]]:
+                    adj_list[seq[idx]].add(seq[idx+1])
+                    in_degree_table[seq[idx+1]] += 1
+        
+        for key in in_degree_table.keys():
+            if in_degree_table[key] == 0 and key in adj_list.keys():
+                bfs_queue.append(key)
+        
+        while len(bfs_queue) > 0:
+            size = len(bfs_queue)
+            if size > 1:
+                return False
+            head_idx = bfs_queue.pop()
+            result.append(head_idx)
+            if head_idx in adj_list.keys():
+                for node in adj_list[head_idx]:
+                    in_degree_table[node] -= 1
+                    if in_degree_table[node] == 0:
+                        bfs_queue.append(node)
+                    
+        return result == org
