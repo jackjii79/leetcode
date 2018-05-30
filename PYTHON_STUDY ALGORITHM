@@ -156,3 +156,52 @@ while startqueue is not empty or endqueue is not empty:
           endvisit.add(adj)
           endqueue.append(adj)
  return -1 #if not connected between start and end
+ 
+ problem: serialize & deserialize binary tree sample code:
+ def serialize(self, root):
+        # write your code here
+        result, bfs_queue = "", [root]
+        while len(bfs_queue) > 0:
+            size = len(bfs_queue)
+            if bfs_queue == [None] * size:
+                break
+            for i in range(size):
+                head = bfs_queue.pop(0)
+                if head is not None:
+                    result += str(head.val) + ','
+                    bfs_queue.append(head.left) #make sure level order traversal !!
+                    bfs_queue.append(head.right) ##make sure level order traversal !!
+                else:
+                    result += "#,"
+                        
+        idx = len(result) - 1
+        while idx >= 0 and (result[idx] == "," or result[idx] == "#"):
+            idx -= 1
+                        
+        return result[:idx+1]
+
+    """
+    @param data: A string serialized by your serialize method.
+    This method will be invoked second, the argument data is what exactly
+    you serialized at method "serialize", that means the data is not given by
+    system, it's given by your own serialize method. So the format of data is
+    designed by yourself, and deserialize it here as you serialize it in 
+    "serialize" method.
+    """
+    def deserialize(self, data):
+        # write your code here
+        if data == "":
+            return None
+        idx, bfs_queue, data_list = 1, [], data.split(',')
+        root = TreeNode(int(data_list[idx-1]))
+        bfs_queue.append(root)
+        while idx < len(data_list):
+            head = bfs_queue.pop(0)
+            if data_list[idx] != "#":
+                head.left = TreeNode(int(data_list[idx]))
+                bfs_queue.append(head.left)
+            if idx+1 < len(data_list) and data_list[idx+1] != "#":
+                head.right = TreeNode(int(data_list[idx+1]))
+                bfs_queue.append(head.right)
+            idx += 2
+        return root
