@@ -1,0 +1,33 @@
+def cloneGraph(self, node):
+        # write your code here
+        map_table, set_visit, bfs_queue = dict(), set(), [node]
+        #establish mapping relation from new graph node to old graph node
+        set_visit.add(node)
+        while len(bfs_queue) > 0:
+            head = bfs_queue.pop(0)
+            if head not in map_table.keys() and head is not None:
+                map_table[head] = UndirectedGraphNode(head.label)
+            if head is not None:
+                for neibo in head.neighbors:
+                    if neibo not in set_visit:
+                        set_visit.add(neibo)
+                        bfs_queue.append(neibo)
+                
+        #redirect mapping from old graph node to new graph node
+        bfs_queue = []
+        set_visit.clear()
+        set_visit.add(node)
+        bfs_queue.append(node)
+        while len(bfs_queue) > 0:
+            head = bfs_queue.pop(0)
+            if head is not None:
+                for neibo in head.neighbors:
+                    map_table[head].neighbors.append(map_table[neibo])
+                    if neibo not in set_visit:
+                        set_visit.add(neibo)
+                        bfs_queue.append(neibo)
+                    
+        if node in map_table:
+            return map_table[node]
+        return None
+        
