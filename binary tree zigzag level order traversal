@@ -1,0 +1,27 @@
+def zigzagLevelOrder(self, root):
+        # write your code here
+        switch, bfs_queue, result = 1, [], []
+        
+        bfs_queue.append(root)
+        
+        while len(bfs_queue) > 0:
+            size = len(bfs_queue)
+            temp = []
+            switch = (switch + 1) % 2
+            bfs_queue = bfs_queue[::-1]
+            for i in range(size):
+                node = bfs_queue.pop(0)
+                if node is not None:
+                    temp.append(node.val)
+                    if switch == 0 and node.left is not None:
+                        bfs_queue.append(node.left)
+                    if switch == 0 and node.right is not None:
+                        bfs_queue.append(node.right)
+                    if switch == 1 and node.right is not None:
+                        bfs_queue.append(node.right)
+                    if switch == 1 and node.left is not None:
+                        bfs_queue.append(node.left)
+            if len(temp) > 0:
+                result.append(temp)
+                
+        return result
