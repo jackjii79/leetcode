@@ -205,3 +205,32 @@ while startqueue is not empty or endqueue is not empty:
                 bfs_queue.append(head.right)
             idx += 2
         return root
+
+using BFS to check if a graph is a valid tree:
+#method 1 : BFS
+        if len(edges) != n-1: #check if there exists a cycle !!!
+            return False
+        
+        adj_list, bfs_queue, set_visit, count = dict(), [], set(), 0
+        
+        for pair in edges:
+            if pair[0] not in adj_list.keys():
+                adj_list[pair[0]] = []
+            if pair[1] not in adj_list.keys():
+                adj_list[pair[1]] = []
+            adj_list[pair[0]].append(pair[1])
+            adj_list[pair[1]].append(pair[0])
+        
+        bfs_queue.append(0)
+        set_visit.add(0)
+        
+        while len(bfs_queue) > 0:
+            current = bfs_queue.pop(0)
+            count += 1
+            if current in adj_list.keys():
+                for node in adj_list[current]:
+                    if node not in set_visit:
+                        set_visit.add(node)
+                        bfs_queue.append(node)
+                    
+        return count == n
