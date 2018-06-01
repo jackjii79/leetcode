@@ -1,0 +1,82 @@
+class Solution:
+    def check_equality(self, state1, state2):
+        for row in range(3):
+            for col in range(3):
+                if state1[row][col] != state2[row][col]:
+                    return False
+        return True
+        
+    def generate_state(self, state):
+        result = ""
+        for row in range(3):
+            for col in range(3):
+                result += str(state[row][col])
+    
+        return result
+        
+    """
+    @param init_state: the initial state of chessboard
+    @param final_state: the final state of chessboard
+    @return: return an integer, denote the number of minimum moving
+    """
+    def minMoveStep(self, init_state, final_state):
+        # # write your code here
+        if self.check_equality(init_state, final_state) == True:
+            return 0
+        
+        st, end = self.generate_state(init_state), self.generate_state(final_state)
+        start_bfs_queue, start_set_visit, result, direction_array = [st], set(), 0, [[1,0],[0,1],[-1,0],[0,-1]]
+        start_set_visit.add(st)
+        end_bfs_queue, end_set_visit = [end], set()
+        end_set_visit.add(end)
+        
+        while len(start_bfs_queue) > 0 or len(end_bfs_queue) > 0:
+            if len(start_bfs_queue) > 0:
+                size = len(start_bfs_queue)
+                result += 1
+                for i in range(size):
+                    cur_state = start_bfs_queue.pop(0)
+                    val = cur_state.find('0')
+                    if val == -1:
+                        continue
+                    row, col = int(val / 3), val % 3
+                    for add_row, add_col in direction_array:
+                        new_row, new_col = row + add_row, col + add_col
+                        if new_row >= 0 and new_row < 3 and new_col >= 0 and new_col < 3:
+                            new_val = new_row * 3 + new_col
+                            input_array = list(cur_state)
+                            input_array[val], input_array[new_val] = input_array[new_val], input_array[val]
+                            new_state = "".join(input_array)
+                            if new_state in start_set_visit:
+                                continue
+                            elif new_state in end_set_visit:
+                                return result
+                            elif new_state not in start_set_visit:
+                                start_set_visit.add(new_state)
+                                start_bfs_queue.append(new_state)
+            
+            if len(end_bfs_queue) > 0:
+                size = len(end_bfs_queue)
+                result += 1
+                for i in range(size):
+                    cur_state = end_bfs_queue.pop(0)
+                    val = cur_state.find('0')
+                    if val == -1:
+                        continue
+                    row, col = int(val / 3), val % 3
+                    for add_row, add_col in direction_array:
+                        new_row, new_col = row + add_row, col + add_col
+                        if new_row >= 0 and new_row < 3 and new_col >= 0 and new_col < 3:
+                            new_val = new_row * 3 + new_col
+                            input_array = list(cur_state)
+                            input_array[val], input_array[new_val] = input_array[new_val], input_array[val]
+                            new_state = "".join(input_array)
+                            if new_state in end_set_visit:
+                                continue
+                            elif new_state in start_set_visit:
+                                return result
+                            elif new_state not in end_set_visit:
+                                end_set_visit.add(new_state)
+                                end_bfs_queue.append(new_state)
+                                
+       return -1
