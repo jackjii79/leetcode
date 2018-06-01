@@ -1,0 +1,39 @@
+def shortestDistance(self, grid):
+        # write your code here
+        if len(grid) == 0 or len(grid[0]) == 0:
+            return -1
+            
+        max_row, max_col, direction_array = len(grid), len(grid[0]), [[0,1],[1,0],[-1,0],[0,-1]]
+        targets, result, distance, reach = [], math.inf, [[0 for j in range(max_col)] for i in range(max_row)], [[0 for j in range(max_col)] for i in range(max_row)]
+        
+        for i in range(max_row):
+            for j in range(max_col):
+                if grid[i][j] == 1:
+                    targets.append(i*max_col+j)
+        
+        for val in targets:
+            bfs_queue, set_visit, dist = [val], set(), 0
+            set_visit.add(val)
+            while len(bfs_queue) > 0:
+                size = len(bfs_queue)
+                dist += 1
+                for i in range(size):
+                    node = bfs_queue.pop(0)
+                    row, col = int(node / max_col), node % max_col
+                    for add_row, add_col in direction_array:
+                        new_row, new_col = row + add_row, col + add_col
+                        new_val = new_row * max_col + new_col
+                        if new_row >= 0 and new_row < max_row and new_col >= 0 and new_col < max_col and grid[new_row][new_col] == 0 and new_val not in set_visit:
+                            reach[new_row][new_col] += 1
+                            distance[new_row][new_col] += dist
+                            bfs_queue.append(new_val)
+                            set_visit.add(new_val)
+        
+        for row in range(max_row):
+            for col in range(max_col):
+                if grid[row][col] == 0 and reach[row][col] == len(targets):
+                    result = min(result, distance[row][col])
+            
+        if result != math.inf:
+            return result
+        return -1
