@@ -1,0 +1,57 @@
+class Solution:
+    def __init__(self):
+        self.result = None
+        
+    def traversal(self, root, A, B, pathA, pathB):
+        if pathA[-1] in pathB:
+            self.result = pathA[-1]
+            return
+        
+        elif pathB[-1] in pathA:
+            self.result = pathB[-1]
+            return
+        
+        else:
+            if A.parent is None and B.parent is not None:
+                return self.traversal(root, A, B.parent, pathA, pathB+[B.parent])
+            elif A.parent is not None and B.parent is None:
+                return self.traversal(root, A.parent, B, pathA+[A.parent], pathB)
+            elif A.parent is not None and B.parent is not None:
+                return self.traversal(root, A.parent, B.parent, pathA+[A.parent], pathB+[B.parent])
+                
+    def divide_conquer(self, root, A, B):
+        if root is None:
+            return None
+            
+        leftlca = self.divide_conquer(root.left, A, B)
+        rightlca = self.divide_conquer(root.right, A, B)
+        lca = None
+        if leftlca is not None and rightlca is not None:
+            lca = root
+        elif leftlca is None and rightlca is None:
+            if root == A or root == B:
+                lca = root
+        elif leftlca is not None:
+            if root == A or root == B:
+                lca = root
+            else:
+                lca = leftlca
+        else:
+            if root == A or root == B:
+                lca = root
+            else:
+                lca = rightlca
+                
+        return lca
+    
+    """
+    @param: root: The root of the tree
+    @param: A: node in the tree
+    @param: B: node in the tree
+    @return: The lowest common ancestor of A and B
+    """
+    def lowestCommonAncestorII(self, root, A, B):
+        # write your code here
+        #self.traversal(root, A, B, [A], [B])
+        #return self.result
+        return self.divide_conquer(root, A, B)
