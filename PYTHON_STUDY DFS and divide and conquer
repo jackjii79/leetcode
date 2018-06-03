@@ -1,1 +1,79 @@
-
+1 Iteration on tree:
+Inorder traversal:
+def inorderTraversal(self, root):
+        # write your code here
+        state_stack, result, current = [], [], root
+        while True:
+            while current is not None:
+                state_stack.append(current)
+                current = current.left
+            if len(state_stack) == 0:
+                break
+            node = state_stack.pop()
+            if node is not None:
+                result.append(node.val)
+            current = node.right
+        return result
+        
+Preorder traversal:
+def preorderTraversal(self, root):
+        # write your code here
+        state_stack, result, current = [], [], root
+        while True:
+            while current is not None:
+                state_stack.append(current)
+                result.append(current.val)
+                current = current.left
+            if len(state_stack) == 0:
+                break
+            node = state_stack.pop()
+            current = node.right
+        return result
+        
+postorder traversal:
+def postorderTraversal(self, root):
+        # write your code here
+        first_state_stack, sec_state_stack = [root], []
+        while len(first_state_stack) > 0:
+            node = first_state_stack.pop()
+            if node is not None:
+                sec_state_stack.insert(0,node.val)
+                first_state_stack.append(node.left)
+                first_state_stack.append(node.right)
+        return sec_state_stack
+        
+divide and conquer example problem: check validate binary search tree
+def __init__(self):
+        self.lastnode, self.result = None, True
+        
+    def traversal(self, root):
+        if root is not None:
+            self.traversal(root.left)
+            if self.lastnode is not None and self.lastnode.val >= root.val:
+                self.result = False
+            self.lastnode = root
+            self.traversal(root.right)
+        
+    #return maximum val of subtree rooted by root; minimum val of subtree rooted by root; boolean indicating if subtree rooted by root is a valida binary search tree
+    def divide_conquer(self, root):
+        if root is None:
+            return 0-math.inf, math.inf, True
+        leftmax, leftmin, is_bst_left = self.divide_conquer(root.left)
+        rightmax, rightmin, is_bst_right = self.divide_conquer(root.right)
+        if is_bst_left == False or is_bst_right == False:
+            return None, None, False
+        if leftmax >= root.val or rightmin <= root.val:
+            return None, None, False
+        else:
+            return max(rightmax, root.val), min(leftmin, root.val), True
+        
+    """
+    @param root: The root of binary tree.
+    @return: True if the binary tree is BST, or false
+    """
+    def isValidBST(self, root):
+        # write your code here
+        #self.traversal(root)
+        #return self.result
+        maxval, minval, result = self.divide_conquer(root)
+        return result
