@@ -1,60 +1,21 @@
 class Solution:
-    #leftnum/rightnum indicates the longest sequence rooted by current root;
-    #is_increasing boolean flag indicates if sequence rooted by current root is increasing/decreasing/non(#increasing sequence has same length as #decreasing sequence or can be both incre/decre seqs rooted by current root)
-    #maxres indicates the maximum seqs
     def divide_conquer(self, root):
         if root is None:
-            return 0, None, 0
-        leftnum, is_increasing_left, maxresleft = self.divide_conquer(root.left)
-        rightnum, is_increasing_right, maxresright = self.divide_conquer(root.right)
-        resultl, resultr, is_increasing_l, is_increasing_r, maxres = 1, 1, None, None, 1
-        
-        if root.left and root.val + 1 == root.left.val:
-            is_increasing_l = True
-            if is_increasing_left != False: #as long as it is not a decreasing order, we can add all
-                resultl += leftnum
-            else:
-                resultl += 1
-        
-        elif root.left and root.val - 1 == root.left.val:
-            is_increasing_l = False
-            if is_increasing_left != True: #as long as it is not a increasing order, we can add all
-                resultl += leftnum
-            else:
-                resultl += 1
-        
-        if root.right and root.val + 1 == root.right.val:
-            is_increasing_r = True
-            if is_increasing_right != False:
-                resultr += rightnum
-            else:
-                resultr += 1
-        
-        elif root.right and root.val - 1 == root.right.val:
-            is_increasing_r = False
-            if is_increasing_right != True:
-                resultr += rightnum
-            else:
-                resultr += 1
-        
-        result, is_increasing = 0, None
-        
-        #special case consider
-        if (is_increasing_l == True and is_increasing_r == False) or (is_increasing_l == False and is_increasing_r == True):
-            maxres = max(maxres, resultl + resultr - 1)
-        
-        result = max(resultl, resultr)
-        
-        #if resultl == resultr, it is a non order
-        if resultl > resultr:
-            is_increasing = is_increasing_l
-        
-        elif resultl < resultr:
-            is_increasing = is_increasing_r
-        
-        maxres = max(maxres, maxresleft, maxresright, result)
-        
-        return result, is_increasing, maxres
+            return 0, 0, 0
+        left_decre, left_incre, maxleft = self.divide_conquer(root.left)
+        right_decre, right_incre, maxright = self.divide_conquer(root.right)
+        decre, incre = 0, 0
+        if root.left and root.left.val + 1 == root.val:
+            decre = max(decre, left_decre + 1)
+        elif root.left and root.left.val - 1 == root.val:
+            incre = max(incre, left_incre + 1)
+        if root.right and root.right.val + 1 == root.val:
+            decre = max(decre, right_decre + 1)
+        elif root.right and root.right.val - 1 == root.val:
+            incre = max(incre, right_incre + 1)
+        res = incre + decre + 1
+        maxres = max(res, maxleft, maxright)
+        return decre, incre, maxres
         
     """
     @param root: the root of binary tree
