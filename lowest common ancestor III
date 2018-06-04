@@ -1,0 +1,56 @@
+class Solution:
+    def divide_conquer(self, root, A, B):
+        if root is None:
+            return None, None
+            
+        left_lca_a, left_lca_b = self.divide_conquer(root.left, A, B)
+        right_lca_a, right_lca_b = self.divide_conquer(root.right, A, B)
+        lca_a, lca_b = None, None
+        
+        if (left_lca_a == None and left_lca_b != None and right_lca_a != None and right_lca_b == None) or (left_lca_a != None and left_lca_b == None and right_lca_a == None and right_lca_b != None):
+            lca_a, lca_b = root, root
+        
+        elif left_lca_a == None and left_lca_b == None and right_lca_a == None and right_lca_b == None:
+            if root == A:
+                lca_a = root
+            if root == B:
+                lca_b = root
+                
+        elif left_lca_a == None and left_lca_b == None:
+            if right_lca_a != None and right_lca_b != None:
+                lca_a, lca_b = right_lca_a, right_lca_b
+            elif right_lca_a != None:
+                lca_a = right_lca_a
+                if root == B:
+                    lca_b, lca_a = root, root
+            elif right_lca_b != None:
+                lca_b = right_lca_b
+                if root == A:
+                    lca_a, lca_b = root, root
+                    
+        elif right_lca_a == None and right_lca_b == None:
+            if left_lca_a != None and left_lca_b != None:
+                lca_a, lca_b = left_lca_a, left_lca_b
+            elif left_lca_a != None:
+                lca_a = left_lca_a
+                if root == B:
+                    lca_b, lca_a = root, root
+            elif left_lca_b != None:
+                lca_b = left_lca_b
+                if root == A:
+                    lca_a, lca_b = root, root
+                    
+        return lca_a, lca_b
+            
+    """
+    @param: root: The root of the binary tree.
+    @param: A: A TreeNode
+    @param: B: A TreeNode
+    @return: Return the LCA of the two nodes.
+    """
+    def lowestCommonAncestor3(self, root, A, B):
+        # write your code here
+        lca_a, lca_b = self.divide_conquer(root, A, B)
+        if lca_a == lca_b and lca_a is not None:
+            return lca_a
+        return None
