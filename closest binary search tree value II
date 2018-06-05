@@ -1,0 +1,94 @@
+def find_next_node(self, currentnode, root):
+        if currentnode is None or (currentnode.right is None and currentnode == root):
+            return None
+        if currentnode.right:
+            temp = currentnode.right
+            while temp.left:
+                temp = temp.left
+            return temp
+        else:
+            temp, lastnode = root, None
+            while temp is not None and temp != currentnode:
+                if temp.val > currentnode.val:
+                    lastnode = temp
+                    temp = temp.left
+                elif temp.val < currentnode.val:
+                    temp = temp.right
+            return lastnode
+            
+    def find_previous_node(self, currentnode, root):
+        if currentnode is None or (currentnode.left is None and currentnode == root):
+            return None
+        if currentnode.left:
+            temp = currentnode.left
+            while temp.right:
+                temp = temp.right
+            return temp
+        else:
+            temp, lastnode = root, None
+            while temp is not None and temp != currentnode:
+                if temp.val > currentnode.val:
+                    temp = temp.left
+                elif temp.val < currentnode.val:
+                    lastnode = temp
+                    temp = temp.right
+            return lastnode
+        
+    """
+    @param root: the given BST
+    @param target: the given target
+    @param k: the given k
+    @return: k values in the BST that are closest to the target
+    """
+    def closestKValues(self, root, target, k):
+        # write your code here
+        result, temp, start_pointer, previous_pointer, next_pointer = [], root, None, None, None
+        
+        while temp is not None:
+            start_pointer = temp
+            
+            if temp.val > target:
+                temp = temp.left
+            
+            elif temp.val < target:
+                temp = temp.right
+            
+            else:
+                break
+            
+        if start_pointer is not None:
+            
+            if start_pointer.val > target:
+                previous_pointer = self.find_previous_node(start_pointer, root)
+                next_pointer = start_pointer
+            
+            elif start_pointer.val < target:
+                previous_pointer = start_pointer
+                next_pointer = self.find_next_node(start_pointer, root)
+            
+            else:
+                k -= 1
+                result.append(start_pointer.val)
+                previous_pointer, next_pointer = self.find_previous_node(start_pointer, root), self.find_next_node(start_pointer, root)
+            
+            for i in range(k):
+                
+                if previous_pointer is not None and next_pointer is not None:
+                
+                    if abs(next_pointer.val - target) >= abs(previous_pointer.val - target):
+                        result.append(previous_pointer.val)
+                        previous_pointer = self.find_previous_node(previous_pointer, root)
+                
+                    else:
+                        result.append(next_pointer.val)
+                        next_pointer = self.find_next_node(next_pointer, root)
+                
+                elif previous_pointer is not None:
+                    result.append(previous_pointer.val)
+                    previous_pointer = self.find_previous_node(previous_pointer, root)
+                
+                elif next_pointer is not None:
+                    result.append(next_pointer.val)
+                    next_pointer = self.find_next_node(next_pointer, root)
+        
+        return result
