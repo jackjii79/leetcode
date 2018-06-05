@@ -77,3 +77,60 @@ def __init__(self):
         #return self.result
         maxval, minval, result = self.divide_conquer(root)
         return result
+        
+problem: binary tree path sum using divide and conquer:
+Your are given a binary tree in which each node contains a value. Design an algorithm to get all paths which sum to a given value.
+The path does not need to start or end at the root or a leaf, but it must go in a straight line down.
+def divide_conquer(self, root, target):
+        if root is None:
+            return []
+        leftpath = self.divide_conquer(root.left, target)
+        rightpath = self.divide_conquer(root.right, target)
+        newpath = leftpath + rightpath
+        result = []
+        if root.val == target:
+            self.result.append([root.val])
+        result.append([root.val])
+        for i in range(len(newpath)):
+            sumpath = sum(newpath[i])
+            if root.val + sumpath == target:
+                self.result.append([root.val]+newpath[i])
+            result.append([root.val]+newpath[i])
+        return result
+        
+Follow up of binary tree path sum III: any path in the binary tree is now possible !(left->root->right/left->root/root->right)
+def divide_conquer(self, root, target):
+        if root is None:
+            return []
+        leftpath = self.divide_conquer(root.left, target)
+        rightpath = self.divide_conquer(root.right, target)
+        result = []
+        
+        if root.val == target:
+            self.result.append([root.val])
+        result.append([root.val])
+        
+        for l_path in leftpath:
+            lreverse_path = l_path[::-1]
+            sumleft = sum(l_path)
+            if sumleft + root.val == target:
+                self.result.append(l_path + [root.val])
+                self.result.append([root.val] + lreverse_path)
+            result.append(l_path + [root.val])
+            for r_path in rightpath:
+                rreverse_path = r_path[::-1]
+                sumright = sum(r_path)
+                if sumleft + sumright + root.val == target:
+                    self.result.append(l_path + [root.val] + rreverse_path)
+                    self.result.append(r_path + [root.val] + lreverse_path)
+        
+        for r_path in rightpath:
+            rreverse_path = r_path[::-1]
+            sumright = sum(r_path)
+            if sumright + root.val == target:
+                self.result.append(r_path + [root.val])
+                self.result.append([root.val] + rreverse_path)
+            result.append(r_path + [root.val])
+                    
+        return result
+
