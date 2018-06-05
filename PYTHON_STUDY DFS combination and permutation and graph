@@ -1,0 +1,26 @@
+1 problem find missing number:
+Giving a string with number from 1-n in random order, but miss 1 number.Find that number.
+def dfs(self, n, str, result, visit_set, count):
+        if len(str) == 0 and count == n-1:
+            return result
+        
+        elif count < n - 1:
+            for i in range(len(str)):
+                if int(str[:i+1]) >= 1 and int(str[:i+1]) <= n and int(str[:i+1]) not in visit_set and str[0] != '0':
+                    visit_set.add(int(str[:i+1]))
+                    res = self.dfs(n, str[i+1:], result - int(str[:i+1]), visit_set, count+1)
+                    if res != None:
+                        return res
+                    visit_set.remove(int(str[:i+1]))
+                    
+        return None
+            
+    """
+    @param n: An integer
+    @param str: a string with number from 1-n in random order and miss one number
+    @return: An integer
+    """
+    def findMissing2(self, n, str):
+        # write your code here
+        result = sum(range(1,n+1))
+        return self.dfs(n, str, result, set(), 0)
