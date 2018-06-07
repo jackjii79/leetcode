@@ -49,3 +49,26 @@ def minCut(self, s):
                         result[i] = min(result[i], result[j-1] + 1)
                     
         return result[-1]
+
+problem subsets using 1/0 method of DFS: meaning we either choose current element as part of each combination or not !
+
+def dfs(self, nums, idx, temp_result, result):
+        if idx == len(nums):
+            result.append(temp_result)
+        elif idx < len(nums):
+            self.dfs(nums, idx+1, temp_result+[nums[idx]], result)
+            self.dfs(nums, idx+1, temp_result, result)
+        return
+    
+    """
+    @param nums: A set of numbers
+    @return: A list of lists
+    """
+    def subsets(self, nums):
+        # write your code here
+        result = []
+        if nums == None:
+            return result
+        nums.sort()
+        self.dfs(nums, 0, [], result)
+        return result
