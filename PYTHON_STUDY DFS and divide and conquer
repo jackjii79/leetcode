@@ -1,4 +1,4 @@
-1 Iteration on tree:
+1 Iteration on tree:(preorder is the inverse of postorder)
 Inorder traversal:
 def inorderTraversal(self, root):
         # write your code here
