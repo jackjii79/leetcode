@@ -1,3 +1,4 @@
+DFS == backtracking !!!
 1 problem find missing number:
 Giving a string with number from 1-n in random order, but miss 1 number.Find that number.
 def dfs(self, n, str, result, visit_set, count):
