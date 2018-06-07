@@ -170,3 +170,44 @@ def find_next_node(self, currentnode, root):
                     lastnode = temp
                     temp = temp.right
             return lastnode
+
+problem convert sorted list to balanced binary search tree using divide and conquer:get mid node and connect with left and right
+child
+class Solution:
+    def __init__(self):
+        self.current = None
+        
+    def getlength(self, head):
+        count = 0
+        while head is not None:
+            count += 1
+            head = head.next
+        return count
+        
+    def convert(self, length):
+        if length == 0:
+            return None
+            
+        elif length == 1:
+            treenode = TreeNode(self.current.val)
+            self.current = self.current.next
+            return treenode
+        
+        else:  
+            leftnode = self.convert(int(length/2))
+            rootnode = TreeNode(self.current.val)
+            rootnode.left = leftnode
+            self.current = self.current.next
+            if self.current is not None:
+                rightnode = self.convert(length-int(length/2)-1)
+                rootnode.right = rightnode
+            return rootnode
+        
+    """
+    @param: head: The first node of linked list.
+    @return: a tree node
+    """
+    def sortedListToBST(self, head):
+        # write your code here
+        self.current = head
+        return self.convert(self.getlength(head))
