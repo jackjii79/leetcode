@@ -73,3 +73,17 @@ def dfs(self, nums, idx, temp_result, result):
         nums.sort()
         self.dfs(nums, 0, [], result)
         return result
+
+problem word break using on-dimensional DP table:
+
+    def wordBreak(self, s, dict):
+        # write your code here
+        dp_table = [False for i in range(len(s)+1)] #dp_table[i] stores check result indicating if s[:i] is wordbreakable !!!
+        dp_table[0] = True #empty is always to be true !!
+        maxlen = self.getmaxlen(dict)
+        for i in range(1, len(s)+1):
+            for j in range(min(maxlen, i)+1):
+                if dp_table[i-j] == True and s[i-j:i] in dict:
+                    dp_table[i] = True
+                    break
+        return dp_table[-1]
