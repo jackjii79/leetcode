@@ -74,6 +74,32 @@ def dfs(self, nums, idx, temp_result, result):
         self.dfs(nums, 0, [], result)
         return result
 
+problem remove invalid parenthese using dp-combination based analogy to subsets II(duplicated element):
+def check_valid(self, s):
+        left, right = 0, 0
+        for char in s:
+            if char == "(":
+                left += 1
+            elif char == ")":
+                right += 1
+            if right > left:
+                return False
+        return left == right
+        
+ def dfs(self, s, left, right, idx, results): #idx is used to prevent duplicated(avoid looking back)
+        if left == 0 and right == 0 and self.check_valid(s) == True:
+            results.append(s)
+            return
+        for i in range(idx, len(s)):
+            if s[i] == "(" or s[i] == ")":
+                if i > idx and s[i-1] == s[i]: #avoid duplicated solutions
+                    continue
+                if left > 0 and s[i] == "(":
+                    self.dfs(s[:i]+s[i+1:], left - 1, right, i, results)
+                if right > 0 and s[i] == ")":
+                    self.dfs(s[:i]+s[i+1:], left, right - 1, i, results)
+        return
+
 problem word break using on-dimensional DP table:
 
     def wordBreak(self, s, dict):
