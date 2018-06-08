@@ -96,7 +96,7 @@ numbers.sort()
                         fourth -= 1
         return result
 
-6 BFS:
+6 BFS: used to solve minimum path related problem !!!
 standard sample code 1: BFS do not need level traversal(general graph)
 queue, visited = [], set()
 queue.append(root)
