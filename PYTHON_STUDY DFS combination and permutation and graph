@@ -109,3 +109,48 @@ problem word break using on-dimensional DP table:
                     dp_table_bool[i] = True
                     dp_table_num[i] += dp_table_num[i-j]
         return dp_table_num[-1]
+        
+problem: word break II using both dp method for bottom-up and memorization top-down approach:
+memorization top-down:
+def dfs(self, s, wordset, mem_table):
+        if s in mem_table.keys():
+            return mem_table[s]
+        
+        results = []
+        
+        if s in wordset:
+            results.append(s)
+        
+        for idx in range(len(s)-1, 0, -1):
+            if s[idx:] in wordset:
+                segs = self.dfs(s[:idx], wordset, mem_table)
+                for sol in segs:
+                    results.append(sol + " " + s[idx:])
+        
+        mem_table[s] = results
+        
+        return results
+     
+bottom-up dp solution:
+    def getmaxlen(self, dict):
+        result = 0
+        for word in dict:
+            result = max(result, len(word))
+        return result
+        
+    def wordBreak(self, s, wordDict):
+        maxlen = self.getmaxlen(wordDict)
+        dp_result_table = [[] for i in range(maxlen+1)]
+
+        for i in range(1, len(s)+1):
+            dp_result_table[i%(maxlen+1)] = []
+            for j in range(1, min(i, maxlen)+1):
+                if s[i-j:i] in wordDict:
+                    if i == j or len(dp_result_table[(i-j)%(maxlen+1)]) > 0:
+                        if i == j:
+                            dp_result_table[i%(maxlen+1)].append(s[:i])
+                        else:
+                            for sol in dp_result_table[(i-j)%(maxlen+1)]:
+                                dp_result_table[i%(maxlen+1)].append(sol + " " + s[i-j:i])
+                        
+        return dp_result_table[len(s)%(maxlen+1)]
