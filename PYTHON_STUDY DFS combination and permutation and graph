@@ -75,6 +75,21 @@ def dfs(self, nums, idx, temp_result, result):
         return result
 
 problem remove invalid parenthese using dp-combination based analogy to subsets II(duplicated element):
+note:in order to find the minimum modification seqs, we calculate relative number of left brackets and right brackets
+instead of absolute number like count_brackets does !!!
+
+def count_brackets(self, s):
+        left, right = 0, 0
+        for char in s:
+            if char == "(":
+                left += 1
+            elif char == ")":
+                if left > 0:
+                    left -= 1
+                else:
+                    right += 1
+        return left, right
+        
 def check_valid(self, s):
         left, right = 0, 0
         for char in s:
