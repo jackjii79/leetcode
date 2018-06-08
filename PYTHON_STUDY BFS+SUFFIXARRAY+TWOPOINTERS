@@ -234,3 +234,37 @@ using BFS to check if a graph is a valid tree:
                         bfs_queue.append(node)
                     
         return count == n
+
+problem : remove invalid parenthese to get the minimum modification such that parentheses is valid
+Remove the minimum number of invalid parentheses in order to make the input string valid. Return all possible results.
+def check_valid(self, s):
+        left, right = 0, 0
+        for char in s:
+            if char == "(":
+                left += 1
+            elif char == ")":
+                right += 1
+            if right > left:
+                return False
+        return left == right
+        
+    def bfs(self, s):
+        results, queue, visited, isfound = [], [s], set(), False
+        visited.add(s)
+        while len(queue) > 0:
+            size = len(queue)
+            for i in range(size):
+                current_seq = queue.pop(0)
+                if self.check_valid(current_seq) == True:
+                    results.append(current_seq)
+                    isfound = True
+                else:
+                    if isfound == False:
+                        for i in range(len(current_seq)):
+                            if current_seq[i] == "(" or current_seq[i] == ")":
+                                new_seq = current_seq[:i]+current_seq[i+1:]
+                                if new_seq not in visited:
+                                    visited.add(new_seq)
+                                    queue.append(new_seq)
+
+        return results
