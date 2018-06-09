@@ -1,4 +1,4 @@
-DFS == backtracking !!!
+DFS == backtracking !!!(递归返回后镜像撤销递归前加入到数据!!!) 
 1 problem find missing number:
 Giving a string with number from 1-n in random order, but miss 1 number.Find that number.
 def dfs(self, n, str, result, visit_set, count):
@@ -12,7 +12,7 @@ def dfs(self, n, str, result, visit_set, count):
                     res = self.dfs(n, str[i+1:], result - int(str[:i+1]), visit_set, count+1)
                     if res != None:
                         return res
-                    visit_set.remove(int(str[:i+1]))
+                    visit_set.remove(int(str[:i+1])) -- 镜像撤销
                     
         return None
             
@@ -195,3 +195,7 @@ bottom-up dp solution:
                                 dp_result_table[i%(maxlen+1)].append(sol + " " + s[i-j:i])
                         
         return dp_result_table[len(s)%(maxlen+1)]
+
+permutation based DFS:
+if i > 0 and nums[i] == nums[i-1] and ! visited[i]://remove duplicated permutation in DFS !!!
+    continue
