@@ -1,5 +1,349 @@
-problem I : word pattern II
-problem II: word ladder II
-problem III: word search II
-problem IV: word break II
-problem V: word squares
+problem I: wildcard matching
+Implement wildcard pattern matching with support for '?' and '*'.
+
+    '?' Matches any single character.
+    '*' Matches any sequence of characters (including the empty sequence).
+    
+idea: using memorization top-down DP method to optimize DFS, start from the last state to the starting state(last to start)
+pattern[i] != '?' and pattern[i] != '*' and pattern[i] == string[j] and dfs(pattern, string, i-1, j-1);
+pattern[i] == '?' and dfs(pattern, string, i-1, j-1);
+pattern[i] == '*' and dfs(pattern, string, i-1, j) or dfs(pattern, string, i, j-1)
+
+class Solution:
+    def is_allstar(self, p, len_p):
+        for idx in range(len_p+1):
+            if p[idx] != '*':
+                return False
+        return True
+        
+    def dfs(self, s, p, len_s, len_p, mem_table):
+        if (len_s == -1 and len_p == -1) or (len_s == -1 and self.is_allstar(p, len_p) == True):
+            return True
+            
+        if len_s == -1 or len_p == -1:
+            return False
+            
+        if mem_table[len_s][len_p] != None:
+            return mem_table[len_s][len_p]
+        
+        res = False    
+        if p[len_p] != '*' and p[len_p] != '?':
+            res = (p[len_p] == s[len_s]) and self.dfs(s, p, len_s - 1, len_p - 1, mem_table)
+        
+        elif p[len_p] == '?':
+            res = self.dfs(s, p, len_s - 1, len_p - 1, mem_table)
+            
+        else:
+            res = self.dfs(s, p, len_s - 1, len_p, mem_table) or self.dfs(s, p, len_s, len_p - 1, mem_table)
+            
+        mem_table[len_s][len_p] = res
+            
+        return res
+    
+    def isMatch(self, s, p):
+        # write your code here
+        mem_table = [[None for j in range(len(p))] for i in range(len(s))]
+        return self.dfs(s, p, len(s)-1, len(p)-1, mem_table)
+        
+problem II: regular expression matching
+'.' Matches any single character.
+'*' Matches zero or more of the preceding element.
+
+idea: using memorization top-down DP method to optimize DFS, start from the last state to the starting state(last to start)
+pattern[i] != '.' and pattern[i] != '*' and pattern[i] == string[j] and dfs(pattern, string, i-1, j-1);
+pattern[i] == '.' and dfs(pattern, string, i-1, j-1);
+pattern[i] == '*' and dfs(pattern, string, i-2, j) or ((pattern[i-1] == string[j] and pattern[i-1] != '.') or pattern[i-1] == '.'
+and dfs(pattern, string, i, j-1))
+
+class Solution:
+    def is_allstar(self, p, idx_p):
+        if (idx_p + 1) % 2 != 0:
+            return False
+        for i in range(0, idx_p+1, 2):
+            if not (p[i] != '*' and p[i+1] == '*'):
+                return False
+        return True
+        
+    def dfs(self, s, p, len_s, len_p, mem_table):
+        if (len_s == -1 and len_p == -1) or (len_s == -1 and self.is_allstar(p, len_p) == True):
+            return True
+            
+        #consider cases when either one reaches end and illegal usage of '*'
+        elif len_s == -1 or len_p == -1 or (len_p == 0 and p[len_p] == '*') or (len_p > 0 and p[len_p-1] == '*' and p[len_p] == '*'):
+            return False
+            
+        if mem_table[len_s][len_p] != None:
+            return mem_table[len_s][len_p]
+            
+        res = False
+        if p[len_p] != '.' and p[len_p] != '*':
+            res = (p[len_p] == s[len_s]) and self.dfs(s, p, len_s - 1, len_p - 1, mem_table)
+            
+        elif p[len_p] == '.':
+            res = self.dfs(s, p, len_s - 1, len_p - 1, mem_table)
+            
+        else:
+            res = self.dfs(s, p, len_s, len_p - 2, mem_table) or (((s[len_s] == p[len_p-1] and p[len_p-1] != '.') or p[len_p-1] == '.') and self.dfs(s, p, len_s - 1, len_p, mem_table))
+            
+        mem_table[len_s][len_p] = res
+        return res
+
+    def isMatch(self, s, p):
+        # write your code here
+        mem_table = [[None for j in range(len(p))] for i in range(len(s))]
+        return self.dfs(s, p, len(s) - 1, len(p) - 1, mem_table)
+
+problem III : word pattern II
+Given pattern = "abab", str = "redblueredblue", return true.
+Given pattern = "aaaa", str = "asdasdasdasd", return true.
+Given pattern = "aabb", str = "xyzabcxzyabc", return false.
+note:here we can not use memorization method because the boolean result based on position of pattern and string is entirely on
+the content of match table !!!
+idea: use traditional permutation-based DFS
+
+class Solution:
+    def dfs(self, pattern, string, match_table):
+        if len(pattern) == 0 and len(string) == 0:
+            return True
+            
+        elif len(pattern) == 0 or len(string) == 0:
+            return False
+        
+        result = False
+        if pattern[0] in match_table.keys():
+            if string.find(match_table[pattern[0]]) != 0:
+                result = False
+            else:
+                result = self.dfs(pattern[1:], string[len(match_table[pattern[0]]):], match_table)
+        
+        else:
+            for idx in range(1, len(string)+1):
+                if string[:idx] not in match_table.values():
+                    match_table[pattern[0]] = string[:idx]
+                    result = self.dfs(pattern[1:], string[idx:], match_table)
+                    del match_table[pattern[0]]
+                
+                if result == True:
+                    break
+        
+        return result
+   
+    def wordPatternMatch(self, pattern, str):
+        # write your code here
+        if len(pattern) > len(str):
+            return False
+        match_table = dict()
+        return self.dfs(pattern, str, match_table)
+
+problem IV: word ladder II
+ Given two words (start and end), and a dictionary, find all shortest transformation sequence(s) from start to end, such that:
+    Only one letter can be changed at a time
+    Each intermediate word must exist in the dictionary
+Example
+Given:
+start = "hit"
+end = "cog"
+dict = ["hot","dot","dog","lot","log"]
+
+idea: our goal is to find the minimal ladder therefore we have to use BFS to find the minimum path and we use that information
+as our instruction when we follow the DFS manner !!(DFS:start->end;BFS:end->start or vice versa,note DFS and BFS can not toward
+the same direction !!because we still not be able to find all minimal paths)
+
+class Solution:
+#establish edges connectivity based on one-character changeable rule of thrub !!!
+    def build_map(self, worddict):
+        mymap = dict()
+        for word in worddict:
+            if word not in mymap.keys():
+                mymap[word] = set()
+            for idx in range(len(word)):
+                current_ascii = ord(word[idx])
+                for j in range(97, 97+26):
+                    if j != current_ascii:
+                        newword = word[:idx] + chr(j) + word[idx+1:]
+                        if newword in worddict:
+                            mymap[word].add(newword)
+        return mymap
+        
+ #construct BFS path distance table based on edge connectivity information obtained from above function !
+    def bfs(self, start, end, worddict):
+        distance, bfs_queue, dist, visit_set = dict(), [start], -1, set()
+        mymap = self.build_map(worddict)
+        visit_set.add(start)
+        while len(bfs_queue) > 0:
+            size = len(bfs_queue)
+            dist += 1
+            for i in range(size):
+                curr = bfs_queue.pop(0)
+                if curr not in distance.keys():
+                    distance[curr] = dist
+                for word in mymap[curr]:
+                    if word not in visit_set:
+                        bfs_queue.append(word)
+                        visit_set.add(word)
+        return mymap, distance
+        
+    def dfs(self, start, end, mymap, mydistance, temp_result, results):
+        if start == end:
+            results.append(temp_result)
+            
+        for word in mymap[start]:
+            if mydistance[start] == mydistance[word] + 1: #instruct the direction of DFS based on BFS !!
+                self.dfs(word, end, mymap, mydistance, temp_result+[word], results)
+   
+    def findLadders(self, start, end, dict):
+        # write your code here
+        #method : BFS + DFS
+        if start == end:
+            return [[start],[start,end]]
+        dict.add(start) #add both start and end into dictionary in case there is no such start/end !!
+        dict.add(end)
+        results = []
+        mymap, distance = self.bfs(end, start, dict)
+        self.dfs(start, end, mymap, distance, [start], results)
+        return results
+
+problem V: word search II
+given a matrix of lower alphabets and a dictionary. Find all words in the dictionary that can be found in the matrix. 
+A word can start from any position in the matrix and go left/right/up/down to the adjacent position. One character only be 
+used once in one word.
+
+idea: DFS+Trie
+
+class TrieNode:
+    def __init__(self):
+        self.children, self.isendofword = dict(), False
+        
+class Solution:
+    def __init__(self):
+        self.trieroot = TrieNode()
+        
+    def insert_words(self, words):
+        for word in words:
+            temp = self.trieroot
+            for ch in word:
+                if ch not in temp.children.keys():
+                    temp.children[ch] = TrieNode()
+                temp = temp.children[ch]
+            temp.isendofword = True
+        return
+    
+    def dfs(self, board, max_row, max_col, row, col, root, temp_result, results):
+        if row >= 0 and row < max_row and col >= 0 and col < max_col:
+          #we always let root pointing to the next new word as condition target to see if this is the end of word !! 
+          #prevent duplicated results !!!
+            if board[row][col] in root.children.keys() and root.children[board[row][col]].isendofword == True:
+                results.add(temp_result + board[row][col])
+                
+            if board[row][col] in root.children.keys():
+                temp = board[row][col]
+                board[row][col] = "#"
+                direction_array = [[0,1],[1,0],[0,-1],[-1,0]]
+                for add_row, add_col in direction_array:
+                    new_row, new_col = add_row + row, add_col + col
+                    self.dfs(board, max_row, max_col, new_row, new_col, root.children[temp], temp_result+temp, results)
+                board[row][col] = temp
+        
+        return
+   
+    def wordSearchII(self, board, words):
+        # write your code here
+        results = set()
+        if len(board) < 1 or len(board[0]) < 1:
+            return list(results)
+        max_row, max_col = len(board), len(board[0])
+        self.insert_words(words)
+        for row in range(max_row):
+            for col in range(max_col):
+                self.dfs(board, max_row, max_col, row, col, self.trieroot, "", results)
+        return list(results)
+
+problem VI: word break II
+Gieve s = lintcode,
+dict = ["de", "ding", "co", "code", "lint"].
+A solution is ["lint code", "lint co de"].
+
+idea: memorization top-down DP method, we use string as key of the hashmap to store pre-computed result !
+
+class Solution:
+    def dfs(self, string, worddict, mem_table):
+        if string in mem_table.keys():
+            return mem_table[string]
+            
+        results = []
+        if len(string) == 0:
+            return results
+            
+        for idx in range(1, len(string)+1):
+            #if this is not the last word, to consider the case when we fail to break the whole words, we append only if segs 
+            #result from last recurssion dfs is not empty !!
+            if string[:idx] in worddict and idx < len(string):
+                segs = self.dfs(string[idx:], worddict, mem_table) #iff not empty, we will add string[:idx] as part of solution !
+                for word in segs:
+                    results.append(string[:idx] + " " + word)
+                    
+            #this is the last word, then we append into results list directly !        
+            elif string[:idx] in worddict and idx == len(string):
+                results.append(string[:idx])
+        
+        mem_table[string] = results
+        return results
+
+problem VII: word squares
+A sequence of words forms a valid word square if the kth row and column read the exact same string, 
+where 0 ≤ k < max(numRows, numColumns).
+For example, the word sequence ["ball","area","lead","lady"] forms a word square because each word reads the same both 
+horizontally and vertically.
+
+idea: we use trie to trace all prefix, when we have one word, we track all words starting with the [1] index of the word;
+when we have two words, we track all words in trie starting with the [2] column index of words; when we have three words, we
+track all words in the trie starting with the [3] column index of words !
+
+class TrieNode:
+    def __init__(self):
+        self.children, self.startwith = dict(), [] #startwith remember all words whose prefix is corresponding nodes in trie !
+        
+class Solution:
+    def __init__(self):
+        self.trieroot = TrieNode()
+        
+    def insert_words(self, words):
+        for word in words:
+            temp = self.trieroot
+            for ch in word:
+                if ch not in temp.children.keys():
+                    temp.children[ch] = TrieNode()
+                temp = temp.children[ch]
+                temp.startwith.append(word) #add words in startwith prefix nodes
+        return
+    
+    def search_prefix(self, prefix):
+        temp = self.trieroot
+        for ch in prefix:
+            if ch not in temp.children.keys():
+                return []
+            temp = temp.children[ch]
+        return temp.startwith #return all words starting with prefix !
+        
+    def dfs(self, length, idx, temp_result, results):
+        if idx == length:
+            results.append(temp_result)
+            return
+        
+        #candidates is all possible words share the same prefix as idx column of square !!
+        candidates = self.search_prefix("".join([word[idx] for word in temp_result]))
+        for cands in candidates:
+            self.dfs(length, idx + 1, temp_result + [cands], results)
+            
+        return
+    
+    def wordSquares(self, words):
+        # write your code here
+        results = []
+        if len(words) < 1 or len(words[0]) < 1:
+            return results
+        length = len(words[0])
+        self.insert_words(words)
+        for word in words:
+            self.dfs(length, 1, [word], results) #starting with all possible initial choices !!!
+        return results
