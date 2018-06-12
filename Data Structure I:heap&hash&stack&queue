@@ -1,0 +1,38 @@
+problem I: first unique character in a string(analogy to LRU)
+idea: solve this problem in a data stream manner !(doubly linked list+hash)
+class listnode:
+    def __init__(self, val):
+        self.prev, self.next, self.val = None, None, val
+        
+class Solution:
+    #linked list maintain a candidate solution which contains all unique element !!!
+    def firstUniqChar(self, str):
+        # Write your code here
+        hashtable, dummy = dict(), listnode(0)
+        tail = dummy
+        for ch in str:
+            if ch not in hashtable.keys():
+                hashtable[ch] = listnode(ch)
+                tail.next = hashtable[ch]
+                hashtable[ch].prev = tail
+                tail = hashtable[ch]
+            else:
+                curr = hashtable[ch]
+                if curr.prev != None:  
+                #when duplicated element detected, we set.prev be None to remove from the entire list since
+                #if node is in the list its prev pointer must not be None ! and retain its hash value to help us check if this is 
+                #a duplicated element !!
+                    if curr == tail:
+                        tail = tail.prev
+                    if curr.prev == dummy:
+                        dummy.next = curr.next
+                        if curr.next != None:
+                            curr.next.prev = dummy
+                    else:
+                        curr.prev.next = curr.next
+                        if curr.next != None:
+                            curr.next.prev = curr.prev
+                    curr.prev = None
+                
+        return dummy.next.val
+        
