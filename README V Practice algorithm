@@ -16,6 +16,7 @@ Matrix power(int n) {
     
     
 Partition & quick select sample code:
+form I:
 def partition(self, array, st, end):
         i, j, key = st, st+1, array[st]
         for j in range(st+1,end+1):
@@ -36,6 +37,25 @@ def partition(self, array, st, end):
                 return self.quick_select(array, pivot+1, end, k)
         else:
             return
+form II:
+def find_pivot(self, nums, st, end):
+        key, i = nums[st], st
+        for j in range(i+1, end+1):
+            if key < nums[j]:
+                i += 1
+                nums[i], nums[j] = nums[j], nums[i]
+        nums[st], nums[i] = nums[i], nums[st]
+        return i - st
+        
+    def quick_select(self, nums, st, end, k):
+        if end > st:
+            pivot = self.find_pivot(nums, st, end)
+            if pivot == k:
+                return
+            elif pivot < k:
+                return self.quick_select(nums, st + pivot + 1, end, k - pivot - 1)
+            else:
+                return self.quick_select(nums, st, st + pivot - 1, k)
 
 prime factorization:
 result, i = [], 2
