@@ -147,6 +147,46 @@ if index >= 0 and index == root.start and index == root.end:
                 self.modify(root.right,index,value)
             root.max = max(root.left.max, root.right.max)
             
+simplified version of build/query/update:
+def build_tree(self, array, st_idx, end_idx):
+        if end_idx < st_idx or array is None or len(array) < 1:
+            return None
+        elif end_idx == st_idx:
+            return treenode(st_idx, end_idx, array[st_idx])
+        else:
+            middle_idx = int((st_idx + end_idx) / 2)
+            newroot = treenode(st_idx, end_idx, 0)
+            newroot.left, newroot.right = self.build_tree(array, st_idx, middle_idx), self.build_tree(array, middle_idx+1, end_idx)
+            newroot.val = newroot.left.val + newroot.right.val
+            return newroot
+            
+def update_tree(self, root, idx, val):
+        if root is None or idx < root.st or idx > root.end:
+            return
+        elif idx >= 0 and idx == root.st and idx == root.end:
+            root.val = val
+        else:
+            if idx <= root.left.end:
+                self.update_tree(root.left, idx, val)
+            else:
+                self.update_tree(root.right, idx, val)
+            root.val = root.left.val + root.right.val
+            return
+        
+ def query_tree(self, root, query_st, query_end):
+        if root is None or query_st > query_end or query_st > root.end or query_end < root.st:
+            return 0
+        elif query_st <= root.st and query_end >= root.end:
+            return root.val
+        else:
+            left, right = 0, 0
+            if query_end <= root.left.end:
+                return self.query_tree(root.left, query_st, query_end)
+            elif query_st > root.left.end:
+                return self.query_tree(root.right, query_st, query_end)
+            else:
+                return self.query_tree(root.left, query_st, root.left.end) + self.query_tree(root.right, root.right.st, query_end)
+            
 Summary: we can use segment to solve range sum proble; number of elements bigger/smaller than a certain given number in a list;
 all problems related to find the min/max/sum of a consecutive range in a list
 note: if we could change the scope of the range by deleting/updating the value of certain treenodes, then we can not use segment tree structure
