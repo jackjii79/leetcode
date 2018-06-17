@@ -71,3 +71,44 @@ def binary_search_count(self, array, st, end, target):
         else:
             return (self.advance_binary_findkth(A, B, st, end, int((sizea+sizeb)/2)+1) + 
             self.advance_binary_findkth(A, B, st, end, int((sizea+sizeb)/2))) / 2
+
+problem: find reverse pairs using binary index tree !!!
+idea: instead of using index of input array, we use the rank number as index of the binary index tree ! convert absolute number
+into relative rank number is called discretization !! for nums[j], our goal is to find #members from 0..j-1 that is bigger than
+nums[j], and do this in a loop and sum up result as our solution !
+
+def low_bits(self, i):
+        return i & (0 - i)
+    
+    def add(self, array, size, idx, val):
+        idx += 1
+        while idx < size:
+            array[idx] += val
+            idx += self.low_bits(idx)
+        return
+    
+    def range_sum(self, array, idx):
+        idx, result = idx + 1, 0
+        while idx > 0:
+            result += array[idx]
+            idx -= self.low_bits(idx)
+        return result
+    
+    #get relative rank number list
+    def sort_index(self, array):
+        results = [0 for i in range(len(array))]
+        index_list = sorted(range(len(array)), key = (lambda k:array[k])) #return sorted index list from smallest to biggest
+        for idx in range(len(array)):
+            results[index_list[idx]] = idx 
+        return results
+    
+    def reversePairs(self, A):
+        # write your code here
+        result, array, size = 0, [0 for i in range(len(A)+1)], len(A)+1
+        if len(A) < 2:
+            return result
+        rank_list = self.sort_index(A)
+        for idx in range(size-1):
+            result += idx - self.range_sum(array, rank_list[idx]) #overall number of members - numbers smaller or equal than target
+            self.add(array, size, rank_list[idx], 1)
+        return result
