@@ -23,7 +23,13 @@ def maxSubarray4(self, nums, k):
             result = max(result, last_max) #last_max is the max subarray sum until ith where i is from k to size !!
         return result
         
-problem 2: find the median of two sorted array using advanced binary search method(二分法) !!
+problem 2: intersection of arrays:
+method 1: hashset
+method 2: sort two arrays and perform merge sorted array logic, work even if duplicated elements exist !
+method 3: sort the smaller array and perform binary search on sorted smaller array with bigger unsorted array to find all 
+shared elements !! this does not work if duplicated element exists !
+        
+problem 3: find the median of two sorted array using advanced binary search method(二分法) !!
 #using binary search to count the number of elements in sorted array that is <= target(inclusive!!!)
 def binary_search_count(self, array, st, end, target):
         if end < st:
