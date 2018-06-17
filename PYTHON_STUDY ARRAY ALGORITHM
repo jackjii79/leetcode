@@ -1,0 +1,67 @@
+problem 1 : Given an integer arrays, find a contiguous subarray which has the largest sum and length should be greater or equal to 
+given length k. Return the largest sum, return 0 if there are fewer than k elements in the array.
+find a maximum subarray sum whose length has >= k
+
+this problem is analogy to problem find maximum average with length >= k !!!
+
+def maxSubarray4(self, nums, k):
+        # write your code here
+        result, size = 0-math.inf, len(nums)
+        if size < k:
+            return 0
+            
+        #sample code for finding maximum subarray sum with length >= k !!!
+        prefix_sum, suffix_sum, min_minus = 0, 0, math.inf
+        for i in range(k):
+            prefix_sum += nums[i]
+        result = max(result, prefix_sum)
+        for i in range(k, size):
+            prefix_sum += nums[i] #prefix sum
+            suffix_sum += nums[i-k] #consecutive subarray sum starting from i-kth
+            min_minus = min(suffix_sum, min_minus) #minimum subarray sum starting from i-kth
+            last_max = prefix_sum - min(min_minus,0) #min(min_minus,0) is the minimum sum of array from i-kth
+            result = max(result, last_max) #last_max is the max subarray sum until ith where i is from k to size !!
+        return result
+        
+problem 2: find the median of two sorted array using advanced binary search method(二分法) !!
+#using binary search to count the number of elements in sorted array that is <= target(inclusive!!!)
+def binary_search_count(self, array, st, end, target):
+        if end < st:
+            return 0
+        while st + 1 < end:
+            middle = int((st + end) / 2)
+            if array[middle] > target:
+                end = middle
+            else:
+                st = middle
+        if st < len(array) and array[st] > target:
+            return st
+        if end < len(array) and array[end] > target:
+            return end
+        return end + 1
+    
+    #using advanced binary search idea to 二分solution !!
+    def advance_binary_findkth(self, array1, array2, st, end, k):
+        while st < end:
+            middle = int((st + end) / 2)
+            count_sum = self.binary_search_count(array1, 0, len(array1)-1, middle) + 
+            self.binary_search_count(array2, 0, len(array2)-1, middle) 
+            if count_sum < k: #if less than k, middle is less than our solution median
+                st = middle + 1
+            else:
+                end = middle
+        return st
+        
+    #main function
+    sizea, sizeb, st, end = len(A), len(B), math.inf, 0-math.inf
+        if sizea + sizeb == 0:
+            return 0
+        if sizea > 0:
+            st, end = min(st, A[0]), max(end, A[-1])
+        if sizeb > 0:
+            st, end = min(st, B[0]), max(end, B[-1])
+        if (sizea+sizeb) % 2:
+            return self.advance_binary_findkth(A, B, st, end, int((sizea+sizeb)/2)+1)
+        else:
+            return (self.advance_binary_findkth(A, B, st, end, int((sizea+sizeb)/2)+1) + 
+            self.advance_binary_findkth(A, B, st, end, int((sizea+sizeb)/2))) / 2
