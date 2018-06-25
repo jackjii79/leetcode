@@ -302,3 +302,60 @@ Attention about performance when perform "x" in array operation in binary search
 Normally, we prefer to use "x" in array than to use "x" not in array, because in operation returns much quickly than not in
 since not in have to scan the whole array !!!
 
+Using binary search to solve problem find the longest increasing subsequence !!
+idea: we prepare an inserted array with first([0]) be 0-math.inf and the rest be math.inf
+we insert number into that array by finding the first element that >= number and replace that original element to insert
+thus, the [0] will be the smallest number and the last non-math.inf be the biggest number, which are in the longest increasing 
+sequence !
+#find the first >= target and replace it !
+    def binary_search(self, nums, target):
+        st, end = 0, len(nums)-1
+        while st < end:
+            middle = int((st + end) / 2)
+            if nums[middle] >= target:
+                end = middle
+            else:
+                st = middle + 1
+        return st
+ #main function
+ dp_table = [math.inf for i in range(size+1)]
+        dp_table[0] = 0-math.inf
+        for i in range(size):
+            index = self.binary_search(dp_table, nums[i])
+            dp_table[index] = nums[i]
+        for i in range(size, 0, -1):
+            if dp_table[i] != math.inf:
+                return i
+        return 0
+
+Similar problem: Russian Doll Envelope(sort array first, then using the method from finding the longest increasing subsequence)
+sort the array in increasing order by weight([0]) and if ties sort by decreasing order of height([1])
+--> sorted(input_array, key=lambda x:(x[0],0-x[1]))
+the reason we sort the ties case in decreasing order of height is to prevent increasing invalid envelopes size such as (4,3), 
+(4,5), but if we put the order like (4,5),(4,3) , the overall number will not increase at all !!!
+    #find the first >= target
+    def binary_search(self, nums, target):
+    st, end = 0, len(nums)-1
+    while st < end:
+    middle = int((st + end) / 2)
+    if nums[middle] < target:
+    st = middle + 1
+    else:
+    end = middle
+    return st
+
+main function:
+size = len(envelopes)
+if size < 1:
+return 0
+input_array, result = sorted(envelopes, key=lambda x:(x[0],-x[1])), [math.inf]*(size+1)
+result[0] = 0-math.inf
+for i in range(size):
+index = self.binary_search(result, input_array[i][1])
+result[index] = input_array[i][1]
+for i in range(size, 0, -1):
+if result[i] != math.inf:
+return i
+return 0
+
+
