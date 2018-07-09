@@ -1,0 +1,109 @@
+There are three kinds of backpack problems based on whether or not we can select the same element multiple times/only once/infinite
+Besides, there are two forms of backpack problems: 1) knapsack fill up probelm; 2) optimization with constraint problem
+notes: to 1) form, we can use 0/1 to indicate whether or not such size can be filled up !!
+
+type 1: 0-1 problem we can select each element only once
+
+backpack I(knapsack fill up problem):
+dp_table = [0 for i in range(m+1)] #whether or not m size can be filled up
+dp_table[0], result, length = 1, 0, len(A)
+for idx in range(length):
+    for wei in range(m, A[idx]-1, -1): #start from the end to idx
+        if dp_table[wei] == 0 and dp_table[wei-A[idx]] == 1:
+            dp_table[wei] = 1
+            result = max(result, wei)
+return result
+
+we use 0 or 1 indicates if such size can be filled up; we start from the last element to guarantee each idx will be chosen only
+once and be the optimal value!!
+
+backpack II(optimization with constraint problem)
+dp_table = [0 for i in range(m+1)]
+length = len(A)
+for idx in range(length):
+    for wei in range(m, A[idx]-1, -1): #start from the end to idx
+        dp_table[wei] = max(dp_table[wei], dp_table[wei-A[idx]] + V[idx])
+return dp_table[m]
+
+we let constraint be the dimension of dp_table for 2) form of backpack problem; we start from the last element to search optimal
+
+backpack V find number of possible ways to get target sum(possible set, not combinations, no ordering)
+dp_table = [0 for i in range(target+1)]
+dp_table[0], length = 1, len(nums)
+for idx in range(length):
+    for wei in range(target, nums[idx]-1, -1): #start from the end to idx
+        dp_table[wei] += dp_table[wei-nums[idx]]
+return dp_table[target]
+
+since [1,2] is the same as [2,1] meaning we should consider whether or not we have 2 as a key to get [1,2] or [2,1]. Thus, we
+consider appearence of new element as first priority !
+
+combination sum IV find number of combinations to get target sum(ordering matters !)
+dp_table = [0 for i in range(target+1)]
+dp_table[0] = 1
+for tar in range(1, target+1):
+    for num in nums:
+        if tar-num >= 0:
+            dp_table[tar] += dp_table[tar-num]
+return dp_table[target]
+
+since [1,2] is different from [2,1] meaning to get combinations of target, we need to get combinations of x that x < target first
+the key is we consider target as first priority !
+
+type 2: multiple choice we can select at most a certain amount of each element from the list
+
+backpack VII (2) form)
+dp_table = [0 for i in range(n+1)]
+length = len(prices)
+for idx in range(length):
+    if prices[idx] * amounts[idx] >= n:
+    #convert multiple-backpack to complete-backpack
+        for val in range(prices[idx], n+1): #start from idx to end to select infinite number
+            dp_table[val] = max(dp_table[val], dp_table[val-prices[idx]] + weight[idx])
+    else: #convert multiple-backpack to one-backpack
+        for k in range(amounts[idx]):
+            for val in range(n, prices[idx]-1, -1): #start from n to idx to select only once
+                dp_table[val] = max(dp_table[val], dp_table[val-prices[idx]] + weight[idx])
+return dp_table[n]
+
+backpack VIII (1) form)
+dp_table = [0 for i in range(n+1)]
+dp_table[0], result = 1, 0
+length = len(value)
+#convert multiple-backpack to complete-backpack
+for idx in range(length):
+    cnt = [0 for i in range(n+1)] #number of occurrence
+    for val in range(value[idx], n+1): #start from idx to end to select infinite number
+        if dp_table[val] == 0 and dp_table[val-value[idx]] == 1 and cnt[val-value[idx]] < amount[idx]:
+            dp_table[val] = 1
+            cnt[val] = cnt[val-value[idx]] + 1
+            result += 1
+return result
+
+the reason we cannot apply complete-backpack directly like backpack VIII to backpack VII is that the optimal result in backpack
+VII may not be able to found by linear search(prices[idx],n+1) !!!
+
+type 3: complete choice we can select each element infinite times
+
+backpack III (2) form)
+dp_table = [0 for i in range(m+1)]
+length = len(A)
+for idx in range(length):
+    for wei in range(A[idx], m+1): #start from idx to end to select infinite times
+        dp_table[wei] = max(dp_table[wei], dp_table[wei-A[idx]] + V[idx])
+return dp_table[m]
+
+backpack X (1) form)
+dp_table = [0 for i in range(n+1)]
+dp_table[0], result = 1, 0
+cost = [150,250,350]
+for idx in range(3):
+    for val in range(cost[idx], n+1): #start from idx to end to select infinite times
+        if dp_table[val] == 0 and dp_table[val-cost[idx]] == 1:
+            dp_table[val] = 1
+            result = max(result, val)
+return n - result
+
+
+
+
