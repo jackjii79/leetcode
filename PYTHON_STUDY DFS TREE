@@ -1,0 +1,396 @@
+DFS + divide&conquer towards tree problems:
+
+DFS search starts from top node to lower node, normally return type is void and result structure will be updated as parameter
+and change as depth of tree be deeper
+
+Divide and conquer first return result from left subtree and right subtree, then return type depends on question and what we do
+next is to conquer result from left subtree and right subtree along with current root structure, then after conquering, we return
+final result which is the subtree rooted by current root node; 
+
+note that sometimes, using divide and conquer method requires customize result data structure to be able to contains all necessary
+information !!
+
+1 tree path related problem:
+the common of this type of problem is that we need to find a path that can start from any node and end from any node in either
+down/up/crossing directions; the return type for divide and conquer is normally vector<vector<>> which is a list of path list
+starting from current root node
+
+find a maximum path starting from root:
+int divide_conquer(TreeNode * root) {
+        int result = 0;
+        if(root != NULL) {
+            int leftmax = divide_conquer(root->left), rightmax = divide_conquer(root->right);
+            result = root->val;
+            if(root->left != NULL)
+                result = max(result, root->val + leftmax);
+            if(root->right != NULL)
+                result = max(result, root->val + rightmax);
+        }
+        return result;
+    }
+
+using dfs search requires we can recognize when we should stop dfs that is when we encounter a leaf node !
+
+sum from root to leaf:
+void dfs_search(TreeNode * root, vector<int>& path, int& result) {
+        if(root != NULL) {
+            if(root->left == NULL && root->right == NULL) {
+                path.push_back(root->val);
+                result += convert_path_number(path);
+                path.pop_back(); //backtracking !!!
+                return;
+            }
+            path.push_back(root->val);
+            dfs_search(root->left, path, result);
+            dfs_search(root->right, path, result);
+            path.pop_back();
+        }
+    }
+    
+Most of the time, divide and conquer is easier in the complexity of logic while dfs search tends to have better performance
+problem find the longest consecutive path
+to solve this problem, we need to use divide and conquer method to consider both increasing order and decreasing order and also
+considers the special case when left and right can also align together with current root node
+
+class resultnode {
+public:
+    int maxincreasing;
+    int maxdecreasing;
+    resultnode() {
+        maxincreasing = 0, maxdecreasing = 0;
+    }
+};
+
+class Solution {
+public:
+    resultnode * divide_conquer(TreeNode* root, int& solution) {
+        resultnode *result = new resultnode();
+        if(root != NULL) {
+            resultnode * leftres = divide_conquer(root->left, solution), * rightres = divide_conquer(root->right, solution);
+            result->maxincreasing = 1, result->maxdecreasing = 1;
+            if(root->left != NULL && root->val + 1 == root->left->val) 
+                result->maxincreasing = leftres->maxincreasing + 1;
+            else if(root->left != NULL && root->val - 1 == root->left->val) 
+                result->maxdecreasing = leftres->maxdecreasing + 1;
+            if(root->right != NULL && root->val - 1 == root->right->val)
+                result->maxdecreasing = max(result->maxdecreasing, rightres->maxdecreasing + 1);
+            else if(root->right != NULL && root->val + 1 == root->right->val)
+                result->maxincreasing = max(result->maxincreasing, rightres->maxincreasing + 1);
+            solution = max(solution, max(result->maxincreasing, result->maxdecreasing));
+            if((root->left != NULL && root->right != NULL && root->val + 1 == root->left->val && root->val - 1 == root->right->val) || (root->left != NULL && root->right != NULL && root->val - 1 == root->left->val && root->val + 1 == root->right->val))
+                solution = max(solution, result->maxdecreasing + result->maxincreasing - 1);
+        }
+        return result;
+    }
+    
+another similar problem requires customized return data structure:
+class resultnode{
+public:
+    int treesize;
+    int treesum;
+    TreeNode *root;
+    resultnode(int a, int b, TreeNode* t) {
+        treesize = a;
+        treesum = b;
+        root = t;
+    }
+};
+
+class Solution {
+public:
+    resultnode *divide_conquer(TreeNode * root, resultnode *solution) {
+        resultnode *result = new resultnode(0, 0, NULL);
+        if(root != NULL) {
+            resultnode *leftres = divide_conquer(root->left, solution);
+            resultnode *rightres = divide_conquer(root->right, solution);
+            result->root = root;
+            result->treesum = root->val + leftres->treesum + rightres->treesum, result->treesize = 1 + leftres->treesize + rightres->treesize;
+            if(solution->root == NULL || (float)solution->treesum/solution->treesize < (float)result->treesum/result->treesize) {
+                solution->root = root;
+                solution->treesum = result->treesum;
+                solution->treesize = result->treesize;
+            }
+        }
+        return result;
+    }
+
+One of the most difficult type of problem is to find a path sum that equals to target, path can be up/down/crossing directions
+To solve this, we use divide and conquer to return a list of paths starting with current root node and what we do in conquer 
+step is to traverse all combinations of paths from left subtree and right subtree to see if there is any path sum equals to
+target
+
+vector<vector<int>> divide_conquer(ParentTreeNode * root, int target, vector<vector<int>>& solution) {
+        vector<vector<int>> result;
+        if(root != NULL) {
+            vector<vector<int>> leftpath = divide_conquer(root->left, target, solution), rightpath = divide_conquer(root->right, target, solution);
+            if(target == root->val)
+                solution.push_back(vector<int>{root->val});
+            result.push_back(vector<int>{root->val});
+            for(int i=0;i < leftpath.size();i++) {
+                leftpath[i].insert(leftpath[i].begin(), root->val);
+                if(accumulate(leftpath[i].begin(), leftpath[i].end(), 0) == target) {
+                    vector<int> temp1 (leftpath[i]), temp2 (leftpath[i]);
+                    reverse(temp2.begin(), temp2.end());
+                    solution.push_back(temp1);
+                    solution.push_back(temp2);
+                }
+                result.push_back(leftpath[i]);
+                for(int j=0;j < rightpath.size();j++) {
+                    if(accumulate(leftpath[i].begin(), leftpath[i].end(), 0) + accumulate(rightpath[j].begin(), rightpath[j].end(), 0) == target) {
+                        vector<int> temp1 (leftpath[i]);
+                        reverse(temp1.begin(), temp1.end());
+                        temp1.insert(temp1.end(), rightpath[j].begin(), rightpath[j].end());
+                        vector<int> temp2 (temp1);
+                        reverse(temp2.begin(), temp2.end());
+                        solution.push_back(temp1);
+                        solution.push_back(temp2);
+                    }
+                }
+            }
+            for(int i=0;i < rightpath.size();i++) {
+                rightpath[i].emplace(rightpath[i].begin(), root->val);
+                if(accumulate(rightpath[i].begin(), rightpath[i].end(), 0) == target) {
+                    vector<int> temp1 (rightpath[i]), temp2 (rightpath[i]);
+                    reverse(temp2.begin(), temp2.end());
+                    solution.push_back(temp1);
+                    solution.push_back(temp2);
+                }
+                result.push_back(rightpath[i]);
+            }
+        }
+        return result;
+    }
+
+if we have parent pointer, then we can take the advantage of parent pointer. just think about the the direction of path can
+be up/down(left/right), thus we can up using parent pointer
+
+void dfs_search(ParentTreeNode * root, int target, vector<vector<int>>& result) {
+        if(root != NULL) {
+            vector<int> buffer;
+            findsum(root, NULL, target, buffer, result);
+            dfs_search(root->left, target, result);
+            dfs_search(root->right, target, result);
+        }
+    }
+    
+    //we use father pointer to guide which direction we are moving ! forward and backward !!!
+    void findsum(ParentTreeNode * root, ParentTreeNode * father, int target, vector<int>& buffer, vector<vector<int>>& result) {
+        if(root != NULL) {
+            buffer.push_back(root->val);
+            if(target == root->val)
+                result.push_back(buffer);
+            if(root->parent != father) // this is to prevent us from traversing back to the same path we have just scanned !!!
+            //here father parameter is like a pivot that guide us which direction we should go and also prevent us from turning back !!!
+                findsum(root->parent, root, target - root->val, buffer, result);
+            if(root->left != father)
+                findsum(root->left, root, target - root->val, buffer, result);
+            if(root->right != father)
+                findsum(root->right, root, target - root->val, buffer, result);
+            buffer.pop_back();
+        }
+    }
+
+dfs search can also solve finding predecessor/successor problem in a more efficient way:
+note: find predecessor/successor is vital to solve problem validate binary search tree !
+
+we can use divide_conquer to solve validate binary search tree:
+private ResultType divideConquer(TreeNode root) {
+        if (root == null) {
+            return new ResultType(true);
+        }
+        
+        ResultType left = divideConquer(root.left);
+        ResultType right = divideConquer(root.right);
+        if (!left.isBST || !right.isBST) {
+            return new ResultType(false);
+        }
+        
+        if (left.maxNode != null && left.maxNode.val >= root.val) {
+            return new ResultType(false);
+        }
+        
+        if (right.minNode != null && right.minNode.val <= root.val) {
+            return new ResultType(false);
+        }
+        
+        // is bst
+        ResultType result = new ResultType(true);
+        result.minNode = left.minNode != null ? left.minNode : root;
+        result.maxNode = right.maxNode != null ? right.maxNode : root;
+        
+        return result;
+    }
+    
+dfs search to solve:
+private int lastVal = Integer.MIN_VALUE;
+    private boolean firstNode = true;
+    public boolean isValidBST(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        if (!isValidBST(root.left)) {
+            return false;
+        }
+        if (!firstNode && lastVal >= root.val) {
+            return false;
+        }
+        firstNode = false;
+        lastVal = root.val;
+        if (!isValidBST(root.right)) {
+            return false;
+        }
+        return true;
+    }
+    
+
+TreeNode * dfs_search(TreeNode *root, TreeNode *father, TreeNode *p) {
+        if(root == NULL)
+            return NULL;
+        if(root->val > p->val) 
+            return dfs_search(root->left, father, p);
+        else if(root->val < p->val)
+            return dfs_search(root->right, root, p);
+        else {
+            if(root->left != NULL) {
+                TreeNode *result = root->left;
+                while(result->right != NULL)
+                    result = result->right;
+                return result;
+            }
+            else 
+                return father;
+        }
+    }
+
+we can use stack to helps us to locate predecessor/sucessor in a efficient way by updating the top node of the stack in either
+increasing/decerasing direction: such structure can be used to solve problem closest binary search tree values II
+
+//construct a stack (lgn) from root to either predecessor/successor/target node
+stack<TreeNode*> get_stack(TreeNode * root, double target) {
+        TreeNode * temp = root;
+        stack<TreeNode*> result;
+        while(temp != NULL) {
+            result.push(temp);
+            if(temp->val > target)
+                temp = temp->left;
+            else
+                temp = temp->right;
+        }
+        return result;
+    }
+    
+    //move towards next higher value direction to guarantee top of stack containing it
+    void moveupper(stack<TreeNode*>& mystack) {
+        TreeNode * topnode = mystack.top();
+        if(topnode->right == NULL) {
+            TreeNode * temp = topnode;
+            mystack.pop();
+            while(mystack.empty() == false && mystack.top()->right == temp) {
+                temp = mystack.top();
+                mystack.pop();
+            }
+        }
+        else {
+            TreeNode * temp = topnode->right;
+            while(temp != NULL) {
+                mystack.push(temp);
+                temp = temp->left;
+            }
+        }
+        return;
+    }
+    
+    //move towards previous lower value direction
+    void movelower(stack<TreeNode*>& mystack) {
+        TreeNode * topnode = mystack.top();
+        if(topnode->left == NULL) {
+            TreeNode * temp = topnode;
+            mystack.pop();
+            while(mystack.empty() == false && mystack.top()->left == temp) {
+                temp = mystack.top();
+                mystack.pop();
+            }
+        }
+        else {
+            TreeNode * temp = topnode->left;
+            while(temp != NULL) {
+                mystack.push(temp);
+                temp = temp->right;
+            }
+        }
+        return;
+    }   
+
+problem find lowest common ancestor of a BST:
+using divide and conquer to solve: to case we are certain that node A and B are exist in BST, we just return any node that is A
+or B and if left tree return and right tree return are both not NULL or root->val is equal to A->val or B->val we return root !
+
+if(root != NULL) {
+            TreeNode *leftres = divide_conquer(root->left, A, B), *rightres = divide_conquer(root->right, A, B);
+            if((leftres != NULL && rightres != NULL) || (root->val == A->val || root->val == B->val))
+                result = root;
+            else if(leftres != NULL)
+                result = leftres;
+            else
+                result = rightres;
+        }
+        
+Harder case is that A or B could not exist in BST , to solve this we need an resultnode return structure holding whether or not
+we found A and B and ancestor we got
+
+class resultnode {
+public:
+    bool founda;
+    bool foundb;
+    TreeNode * ancestor;
+    resultnode() {
+        founda = false, foundb = false;
+        ancestor = new TreeNode(0);
+    }
+};
+
+class Solution {
+public:
+    resultnode * divide_conquer(TreeNode * root, TreeNode * A, TreeNode * B) {
+        resultnode * result = new resultnode();
+        if(root != NULL) {
+            resultnode *leftres = divide_conquer(root->left, A, B);
+            resultnode *rightres = divide_conquer(root->right, A, B);
+            if(leftres->founda == true && leftres->foundb == true) 
+                result = leftres;
+            else if(rightres->founda == true && rightres->foundb == true)
+                result = rightres;
+            else if((leftres->founda == true || leftres->foundb == true) && (rightres->founda == true || rightres->foundb == true)) {
+                result->founda = true;
+                result->foundb = true;
+                result->ancestor = root;
+            }
+            else {
+                if(leftres->founda == true || leftres->foundb == true) {
+                    result->ancestor = leftres->ancestor;
+                    if(leftres->founda == true) 
+                        result->founda = true;
+                    else
+                        result->foundb = true;
+                }
+                else if(rightres->founda == true || rightres->foundb == true) {
+                    result->ancestor = rightres->ancestor;
+                    if(rightres->founda == true)
+                        result->founda = true;
+                    else
+                        result->foundb = true;
+                }
+                if(root->val == A->val || root->val == B->val) {
+                    result->ancestor = root;
+                    if(root->val == A->val) 
+                        result->founda = true;
+                    if(root->val == B->val) 
+                        result->foundb = true;
+                }
+            }
+        }
+        return result;
+    }
+
+
+
